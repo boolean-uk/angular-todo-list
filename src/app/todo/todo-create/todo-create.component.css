@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  gap: 4px;
+}
+
+input {
+  flex: 1;
+  font-size: 14px;
+  padding: 0.2em;
+}
