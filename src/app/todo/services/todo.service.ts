@@ -1,27 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todos: Todo[] = [
+  private todoList: Todo[] = [
     {
-      userId: 1,
       id: this.todoId++,
       title: 'serve the app',
       completed: true,
     },
     {
-      userId: 1,
       id: this.todoId++,
       title: 'familiarise yourself with the codebase',
       completed: false,
     },
     {
-      userId: 1,
       id: this.todoId++,
       title: 'start talking to the api',
       completed: false,
@@ -29,21 +25,28 @@ export class TodoService {
   ];
 
   // TODO replace with a get request
-  todos$: Observable<Todo[]> = of(this.todos);
+  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
 
-  addTodo(todo: string): void {
+  async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
-    this.todos.push({
-      userId: 1,
+    const todo = {
       id: this.todoId++,
-      title: todo,
+      title: title,
       completed: false,
-    });
+    };
+    this.todoList.push(todo);
+
+    return todo;
   }
 
-  updateTodo(updatedTodo: Todo): void {
+  async updateTodo(updatedTodo: Todo): Promise<Todo> {
     // TODO: replace with a PUT request
-    let foundTodo = this.todos.find((todo) => todo.id === updatedTodo.id);
-    foundTodo = { ...foundTodo, ...updatedTodo };
+    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+    Object.assign(foundTodo, updatedTodo);
+
+    return foundTodo;
   }
 }
