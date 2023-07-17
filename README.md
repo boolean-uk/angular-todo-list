@@ -1,5 +1,7 @@
 # Angular Todo List
 
+![example outcome](./images/todo-list-exemplar.png)
+
 ## Learning objectives
 
 - Be able to make HTTP requests using [HttpClient](https://angular.io/api/common/http/HttpClient)
