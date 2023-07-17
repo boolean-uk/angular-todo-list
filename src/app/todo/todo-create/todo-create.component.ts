@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 
 @Component({
@@ -7,11 +7,11 @@ import { TodoService } from '../services/todo.service';
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
-  constructor(private readonly todoService: TodoService) {}
+  @Output('newTodo') newTodo = new EventEmitter<string>();
 
   todo: string = '';
 
   submit() {
-    this.todoService.addTodo(this.todo);
+    this.newTodo.emit(this.todo);
   }
 }
