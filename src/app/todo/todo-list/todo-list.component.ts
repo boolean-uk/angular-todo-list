@@ -17,7 +17,7 @@ export class TodoListComponent {
   }
 
   async newTodo(title: string) {
-    const todo = this.todoService.addTodo(title);
+    await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
   }
 }
