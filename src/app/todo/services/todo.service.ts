@@ -1,31 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private todoList: Todo[] = [];
+  constructor(private readonly http: HttpClient) {
+    this.getAllTodos().then((todo) => (this.todoList = todo));
+  }
+  
+  async getAllTodos(): Promise<Todo[]> {
+    const response = await firstValueFrom(
+      this.http.get<Todo[]>(`${environment.apiUrl}`)
+    );
 
+    console.log('res', response);
+
+    return response;
+  }
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Promise<Todo[]> = this.getAllTodos()
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,19 +33,33 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
 
+    const response = await firstValueFrom(
+      this.http.post(environment.apiUrl, todo)
+    );
+      this.todos=this.getAllTodos()
+    console.log("addTodo",response);
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+  
+    const response = await firstValueFrom(
+      this.http.put<Todo>(environment.apiUrl+"/"+updatedTodo.id, updatedTodo)
+    );
+    return response;
   }
+  async deleteTodo(deletedTodo: Todo): Promise<Todo> {
+  
+    const response = await firstValueFrom(
+      this.http.delete<Todo>(environment.apiUrl+"/"+deletedTodo.id)
+    );
+    return response;
+  }
+}
+export interface todoResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Todo[];
 }
