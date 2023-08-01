@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
   selector: 'app-todo-list', templateUrl: './todo-list.component.html', styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent implements OnInit {
-  todos: Observable<Todo[]> | null = null;
+  todos: Observable<Todo[]> | null = this.todoService.todos;
 
   constructor(private readonly todoService: TodoService) {
 

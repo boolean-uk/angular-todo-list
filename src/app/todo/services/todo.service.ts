@@ -12,22 +12,17 @@ export class TodoService {
   // TODO replace with a get request
   todos: Observable<Todo[]> | null = null
   private todoId: number = 1;
-  private readonly api: string = environment.apiUrl
-
-  private todoList: Todo[] = [{
-    id: this.todoId++, title: 'serve the app', completed: true,
-  }, {
-    id: this.todoId++, title: 'familiarise yourself with the codebase', completed: false,
-  }, {
-    id: this.todoId++, title: 'start talking to the api', completed: false,
-  },];
+  private readonly API: string = environment.apiUrl
+  private readonly API_GET_TODOS: string = `${this.API}/${environment.user}/todo`
+  private readonly API_POST_TODO: string = `${this.API}/${environment.user}/todo`
+  private readonly API_PUT_TODO: string = `${this.API}/${environment.user}/todo/`
 
   constructor(private readonly http: HttpClient) {
+    this.todos = this.getTodos()
   }
 
   getTodos(): Observable<Todo[]> {
-    const observable: Observable<Todo[]> = this.http.get<Todo[]>(this.api + "/przemoai/todo");
-    return observable
+    return this.http.get<Todo[]>(this.API_GET_TODOS)
   }
 
   addTodo(title: string) {
@@ -36,17 +31,20 @@ export class TodoService {
       id: this.todoId++, title: title, completed: false,
     };
 
-    return this.http.post(this.api + "/przemoai/todo", todo)
+    return this.http.post(this.API_POST_TODO, todo)
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
+  updateTodo(updatedTodo: Todo) {
     // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+    let foundTodo
+    this.todos?.subscribe((todoList: Todo[]) => {
+      foundTodo = todoList.find((todo: Todo) => todo.id === updatedTodo.id);
+      if (!foundTodo) {
+        throw new Error('todo not found');
+      }
+      this.http.put(this.API_PUT_TODO + foundTodo.id, updatedTodo).subscribe()
 
-    return foundTodo;
+      return foundTodo;
+    })
   }
 }
