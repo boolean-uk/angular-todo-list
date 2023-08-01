@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class TodoListComponent {
   todos$: Observable<Todo[]> | null = this.todoService.todos$
-  todosError$: Observable<TodoErrorResponse> | null = this.todoService.getErrors()
+  todosError$: Observable<TodoErrorResponse | null> | null = this.todoService.todosError
 
   showCompleted = false
 

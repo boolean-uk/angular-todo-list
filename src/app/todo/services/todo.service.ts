@@ -12,13 +12,10 @@ export class TodoService {
   todos$ = this.refresh$.pipe(
     switchMap(() => this.http.get<Todo[]>(`${environment.apiUrl}/wer08/todo`))
   )
-  todosErrorSender$ = new BehaviorSubject<TodoErrorResponse | null>(null)
+  todosErrorEmitter$ = new BehaviorSubject<TodoErrorResponse | null>(null)
+  todosError = this.todosErrorEmitter$.asObservable();
 
   constructor(private readonly http: HttpClient) { }
-
-  getErrors(): Observable<any> {
-    return this.todosErrorSender$.asObservable();
-  }
 
   addTodo(title: string): Observable<Todo> {
     let requestBody = { title: title }
@@ -26,7 +23,7 @@ export class TodoService {
       tap(() => this.refresh$.next()),
       catchError((err: TodoErrorResponse) => {
         console.error(`Cannot add todo ${title}`)
-        this.todosErrorSender$.next(err)
+        this.todosErrorEmitter$.next(err)
         return throwError(() => err)
       })
     )
