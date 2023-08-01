@@ -1,52 +1,40 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Todo } from '../models/todo';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  todos: Observable<Todo[]> | null = null;
+  private todoId: number = 1;
+  private readonly API: string = environment.apiUrl;
+  private readonly ApiGet: string = `${this.API}/${environment.user}/todo`;
+  private readonly ApiDelete: string = `${this.API}/${environment.user}/todo/`;
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private readonly http: HttpClient) {}
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.ApiGet);
+  }
+
+  addTodo(title: string): Observable<any> {
     const todo = {
       id: this.todoId++,
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
-
-    return todo;
+  
+    return this.http.post(this.ApiGet, todo);
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  updateTodo(updatedTodo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(this.ApiDelete + updatedTodo.id, updatedTodo);
+  }
 
-    return foundTodo;
+  deleteTodo(todoId: number): Observable<any> {
+    return this.http.delete(this.ApiDelete + todoId);
   }
 }
