@@ -8,7 +8,9 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(private readonly todoService: TodoService) {
+    console.log('TodoListComponent',this.todos)
+  }
 
   todos = this.todoService.todos;
 

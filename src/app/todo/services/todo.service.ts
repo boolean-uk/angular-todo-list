@@ -24,7 +24,7 @@ export class TodoService {
     return response.results;
   }
   // TODO replace with a get request
-  todos: Promise<Todo[]> = this.getAllTodos()
+  todos: Promise<Todo[]> = Promise.resolve(this.getAllTodos())
   //Promise.resolve(this.todoList);
 
   async addTodo(title: string): Promise<Todo> {
@@ -39,7 +39,7 @@ export class TodoService {
       this.http.post(environment.apiUrl, todo)
     );
 
-    console.log(response);
+    console.log("addTodo",response);
     return todo;
   }
 
@@ -49,9 +49,9 @@ export class TodoService {
     if (!foundTodo) {
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
+    //Object.assign(foundTodo, updatedTodo);
     const response = await firstValueFrom(
-      this.http.put('https://boolean-api-server.fly.dev/auenc/todo/1', foundTodo)
+      this.http.put(environment.apiUrl+foundTodo.id, updatedTodo)
     );
     return foundTodo;
   }
