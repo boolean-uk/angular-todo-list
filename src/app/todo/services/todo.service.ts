@@ -1,52 +1,74 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private readonly apiURL = environment.apiUrl;
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private http: HttpClient) {}
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
+  async getTodos(): Promise<Todo[]> {
+    let response;
+    try {
+      response = await this.http.get<Todo[]>(this.apiURL).toPromise();
+    } catch (error) {
+      console.log('error in getTodos', error);
+    }
+    return response || [];
+  }
+
+  async addTodo(title: string) {
+    const todo: Todo = {
+      id: 69,
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+    try {
+      const response = await this.http
+        .post<Todo>(this.apiURL, todo)
+        .toPromise();
 
-    return todo;
+      if (!response) {
+        throw new Error('Failed to add todo');
+      }
+    } catch (e) {
+      console.error('Error adding todo:', e);
+    }
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  async updateTodo(updatedTodo: Todo) {
+    try {
+      const response = await this.http
+        .put<Todo>(this.apiURL + '/' + updatedTodo.id, updatedTodo)
+        .toPromise();
 
-    return foundTodo;
+      if (!response) {
+        throw new Error('Failed to update todo');
+      }
+
+      console.log('Updated todo:', response);
+    } catch (error) {
+      console.error('Error updating todo:', error);
+    }
+  }
+
+  async deleteTodo(todo: Todo) {
+    try {
+      const response = await this.http
+        .delete<Todo>(this.apiURL + '/' + todo.id)
+        .toPromise();
+
+      if (!response) {
+        throw new Error('Failed to delete todo');
+      }
+      console.log('Deleted todo:', response);
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+    }
   }
 }
