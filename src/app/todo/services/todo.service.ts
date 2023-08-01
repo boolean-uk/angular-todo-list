@@ -22,7 +22,7 @@ export class TodoService {
 
   addTodo(title: string): Observable<Todo> {
     let requestBody = { title: title }
-    return this.http.post<Todo>(`${environment.apiUrl}/wer08123/todo`, requestBody).pipe(
+    return this.http.post<Todo>(`${environment.apiUrl}/wer08/todo`, requestBody).pipe(
       tap(() => this.refresh$.next()),
       catchError((err: TodoErrorResponse) => {
         console.error(`Cannot add todo ${title}`)
