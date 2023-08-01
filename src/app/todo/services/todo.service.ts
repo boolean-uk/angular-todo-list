@@ -51,7 +51,7 @@ export class TodoService {
 
   async addTodo(title: string) {
     const todo: Todo = {
-      id: 0, // This will be assigned by the API
+      id: 0,
       title: title,
       completed: false,
     };
