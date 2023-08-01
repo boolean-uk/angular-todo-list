@@ -56,4 +56,11 @@ export class TodoService {
 
     return foundTodo;
   }
+
+  async deleteTodo(todo: Todo): Promise<Todo> {
+    const response = await firstValueFrom(
+      this.http.delete(`${environment.apiUrl}/todo/${todo.id}`)
+    );
+    return todo;
+  }
 }
