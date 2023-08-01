@@ -1,6 +1,4 @@
 <div class="todo-list">
-  <app-todo-item
-    *ngFor="let todo of todos$ | async"
-    [todo]="todo"
-  ></app-todo-item>
+  <app-todo-item *ngFor="let todo of todos" [todo]="todo"></app-todo-item>
+  <app-todo-create (onAdd)="addTodo($event)"></app-todo-create>
 </div>

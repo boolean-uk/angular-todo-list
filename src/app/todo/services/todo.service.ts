@@ -14,4 +14,8 @@ export class TodoService {
   getTodos(): Observable<Todo[]> {
     return this.http.get<Todo[]>(`${environment.apiUrl}/mjklukowski/todo`)
   }
+
+  addTodo(todo: Todo): Observable<Todo> {
+    return this.http.post<Todo>(`${environment.apiUrl}/mjklukowski/todo`, todo)
+  }
 }

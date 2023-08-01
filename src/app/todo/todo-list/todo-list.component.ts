@@ -10,11 +10,19 @@ import { Todo } from '../model';
 })
 export class TodoListComponent implements OnInit {
 
-  todos$?: Observable<Todo[]>
+  todos?: Todo[]
 
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    this.todos$ = this.todoService.getTodos()
+    this.todoService.getTodos()
+      .subscribe(todos => this.todos = todos)
+  }
+
+  addTodo(todo: Todo) {
+    this.todoService.addTodo(todo)
+      .subscribe(newTodo => {
+        this.todos?.push(newTodo)
+      })
   }
 }
