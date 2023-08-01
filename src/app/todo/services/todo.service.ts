@@ -14,30 +14,23 @@ export class TodoService {
 
   }
 
-  // // TODO replace with a get request
-  // // todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
    addTodo(title: string): Observable<Todo> {
-  
     const toCreate = {
       title: title,
     };
     return this.http.post<Todo>(`${environment.apiUrl}/PiotrSadolewski/todo`, toCreate)
   }
 
-  // async updateTodo(updatedTodo: Todo): Promise<Todo> {
-  //   // TODO: replace with a PUT request
-  //   const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-  //   if (!foundTodo) {
-  //     throw new Error('todo not found');
-  //   }
-  //   Object.assign(foundTodo, updatedTodo);
-
-  //   return foundTodo;
-  // }
+  updateTodo(todo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${environment.apiUrl}/PiotrSadolewski/todo/${todo.id}`, todo)
+  }
 
   getTodos(): Observable<Todo[]> {
     return this.http.get<Todo[]>(`${environment.apiUrl}/PiotrSadolewski/todo`);
+  }
+
+  deleteTodoById(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/PiotrSadolewski/todo/${id}`);
   }
 }
 
