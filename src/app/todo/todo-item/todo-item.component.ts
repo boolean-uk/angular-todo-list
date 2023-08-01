@@ -10,6 +10,8 @@ export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
 
+  @Output('delete') delete = new EventEmitter<Todo>();
+
   toggleCompleted() {
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
@@ -17,6 +19,15 @@ export class TodoItemComponent {
     this.update.emit({
       ...this.todo,
       completed: !this.todo.completed,
+    });
+  }
+
+  deleteTodo() {
+    if (!this.todo) {
+      throw new Error('cannot delete on null');
+    }
+    this.delete.emit({
+      ...this.todo,
     });
   }
 }
