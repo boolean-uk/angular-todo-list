@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoService } from '../services/todo.service';
+import { TodoErrorResponse, TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 import { Observable } from 'rxjs';
 
@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class TodoListComponent {
   todos$: Observable<Todo[]> | null = this.todoService.todos$
+  todosError$: Observable<TodoErrorResponse> | null = this.todoService.getErrors()
+
   showCompleted = false
 
   constructor(private readonly todoService: TodoService) { }
@@ -28,4 +30,6 @@ export class TodoListComponent {
   toggleCompleted() {
     this.showCompleted = !this.showCompleted;
   }
+
+
 }

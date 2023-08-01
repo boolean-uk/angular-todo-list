@@ -2,3 +2,4 @@
 <button (click)="toggleCompleted()">{{ showCompleted ? "Show incompleted" : "Show completed" }} </button>
 <app-todo-item *ngFor="let todo of todos$ | async | completedTodos: showCompleted" [todo]="todo"
   (update)="updateTodo($event)" (delete)="deleteTodo($event)"></app-todo-item>
+<p *ngIf="todosError$ | async as todosError">{{ todosError.error.error }}</p>
