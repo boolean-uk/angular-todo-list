@@ -11,8 +11,12 @@ export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService) {}
 
   todos: Todo[] | null = null;
+  todosFiltered: Todo[] | null = null;
+  todosStatus: boolean = false;
   async ngOnInit() {
     this.todos = await this.todoService.getAllTodos();
+    this.todosFiltered = this.todos.filter((todo) => !todo.completed);
+
     console.log(this.todos);
   }
   async updateTodo(todo: Todo) {
@@ -29,5 +33,13 @@ export class TodoListComponent implements OnInit {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = await this.todoService.getAllTodos();
+  }
+
+  async toggleCompleted() {
+    if (this.todos) {
+      this.todosFiltered = this.todos.filter(
+        (todo) => todo.completed === this.todosStatus
+      );
+    }
   }
 }

@@ -1,6 +1,7 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleCompleted()">Toggle completed/non-completed</button>
 <app-todo-item
-  *ngFor="let todo of todos"
+  *ngFor="let todo of todosFiltered"
   [todo]="todo"
   (update)="updateTodo($event)"
   (delete)="deleteTodo($event)"
