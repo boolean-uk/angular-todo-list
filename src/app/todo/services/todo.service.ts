@@ -1,52 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import {firstValueFrom} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private readonly http: HttpClient) {
+  }
+  private todoList: Todo[] = [];
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+  async getTodo() {
+    const response = await firstValueFrom(this.http.get<Todo[]>('https://boolean-api-server.fly.dev/levimojo/todo'));
+    console.log('res', response)
+    this.todoList.push(...response)
 
-    return todo;
+    return response
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
+  async addTodo(title: string) {
+    const toCreate = {
+      title: title,
+    };
+    const response = await firstValueFrom(
+      this.http.post('https://boolean-api-server.fly.dev/levimojo/todo', toCreate)
+    );
+    console.log(response);
+  }
+
+  async updateTodo(updatedTodo: Todo) {
     const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
     if (!foundTodo) {
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
+    const response = await firstValueFrom(
+      this.http.put('https://boolean-api-server.fly.dev/levimojo/todo/' + updatedTodo.id, updatedTodo)
+    );
 
-    return foundTodo;
+    console.log(response);
   }
 }
