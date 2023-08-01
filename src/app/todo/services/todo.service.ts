@@ -18,4 +18,9 @@ export class TodoService {
   addTodo(todo: Todo): Observable<Todo> {
     return this.http.post<Todo>(`${environment.apiUrl}/mjklukowski/todo`, todo)
   }
+
+  toggleTodo(todo: Todo): Observable<Todo> {
+    todo.completed = !todo.completed
+    return this.http.put<Todo>(`${environment.apiUrl}/mjklukowski/todo`, todo)
+  }
 }

@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Todo } from '../model';
+import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-todo-item',
@@ -8,4 +9,11 @@ import { Todo } from '../model';
 })
 export class TodoItemComponent {
   @Input() todo!: Todo
+
+  constructor(private todoService: TodoService) {}
+
+  @HostListener("click") toggleCompleted() {
+    this.todoService.toggleTodo(this.todo)
+      .subscribe(newTodo => this.todo.completed = newTodo.completed)
+  }
 }
