@@ -58,4 +58,20 @@ export class TodoService {
     return foundTodo;
    
   }
+
+  async deleteTodo(deletedTodo: Todo): Promise<Todo> {
+
+    const foundTodo = this.todoList.find((todo) => todo.id === deletedTodo.id);
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+    Object.assign(foundTodo, deletedTodo);
+
+    const response = await firstValueFrom(
+      this.http.delete(`${environment.apiUrl}/` + `${foundTodo.id}`)
+    );
+    console.log(response)
+    return foundTodo;
+   
+  }
 }

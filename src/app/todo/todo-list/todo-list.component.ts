@@ -24,4 +24,10 @@ export class TodoListComponent {
   ngOnInit() {
     this.todos = this.todoService.todos;
   }
+
+  async deleteTodo(todo: Todo) {
+    await this.todoService.deleteTodo(todo);
+    this.todos = this.todoService.getAllTodos();
+  }
+  
 }

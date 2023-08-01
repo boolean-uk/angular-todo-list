@@ -1,7 +1,8 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
+<div *ngFor="let todo of todos | async">
+  <app-todo-item [todo]="todo" 
   (update)="updateTodo($event)"
-></app-todo-item>
+  (delete)="deleteTodo($event)"
+  *ngIf="!todo.completed"></app-todo-item>
+</div>
 
