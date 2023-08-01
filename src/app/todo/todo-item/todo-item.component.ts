@@ -9,6 +9,15 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  @Output('delete') delete = new EventEmitter<Todo>();
+
+  toDelete() {
+    if (this.todo) {
+      this.delete.emit(this.todo);
+    }else{
+      throw new Error('cannot delete complete on null');
+    }
+  }
 
   toggleCompleted() {
     if (!this.todo) {
