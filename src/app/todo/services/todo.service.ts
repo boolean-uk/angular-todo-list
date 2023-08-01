@@ -41,4 +41,16 @@ export class TodoService {
 
     console.log(response);
   }
+
+  async deleteTodo(toDelete: Todo) {
+    const foundTodo = this.todoList.find((todo) => todo.id === toDelete.id);
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+    const response = await firstValueFrom(
+      this.http.delete('https://boolean-api-server.fly.dev/levimojo/todo/' + toDelete.id)
+    );
+
+    console.log(response)
+  }
 }
