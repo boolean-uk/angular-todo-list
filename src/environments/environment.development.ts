@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://boolean-api-server.fly.dev/msiekgit/todo',
+  apiUrl: 'https://boolean-api-server.fly.dev/michal-antoniuk/todo',
 };

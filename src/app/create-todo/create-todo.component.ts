@@ -7,14 +7,16 @@ import { TodoService } from 'app/todo.service';
   styleUrls: ['./create-todo.component.css'],
 })
 export class CreateTodoComponent {
-  @Output() todoCreated = new EventEmitter();
-  constructor(private todoService: TodoService) {}
+  @Output() todoListChanged = new EventEmitter();
+  newTodo: string;
 
-  newTodo: string = '';
+  constructor(private todoService: TodoService) {
+    this.newTodo = '';
+  }
 
   async createTodo() {
     await this.todoService.createTodo(this.newTodo);
-    this.todoCreated.emit();
+    this.todoListChanged.emit();
     this.newTodo = '';
   }
 }

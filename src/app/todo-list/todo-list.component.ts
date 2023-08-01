@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Todo, TodoService } from 'app/todo.service';
+import { Todo } from 'app/todo';
+import { TodoService } from 'app/todo.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -18,11 +19,17 @@ export class TodoListComponent {
 
   async getAllTodos() {
     this.todoList = await this.todoService.getAllTodos();
-    this.displayedTodos = [...this.todoList];
+    this.displayedTodos = this.todoList.filter((todo: Todo) => !todo.completed);
   }
 
-  handleCreateTodo() {
-    this.getAllTodos();
+  refreshTodoList() {
+    if (this.showCompleted) {
+      this.displayedTodos = [...this.todoList];
+    } else {
+      this.displayedTodos = this.todoList.filter(
+        (todo: Todo) => !todo.completed
+      );
+    }
   }
 
   toggleShowCompleted() {
