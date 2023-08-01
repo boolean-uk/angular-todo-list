@@ -21,6 +21,9 @@ export class TodoListComponent implements OnInit {
 
   async deleteTodo(todo: Todo) {
     await this.todoService.deleteTodo(todo);
+    if (this.todos) {
+      this.todos = this.todos.filter((item) => item.id !== todo.id);
+    }
   }
 
   async newTodo(title: string) {
