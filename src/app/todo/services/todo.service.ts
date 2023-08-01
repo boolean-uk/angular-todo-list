@@ -1,42 +1,42 @@
-import { Injectable } from '@angular/core';
-import { Todo } from '../models/todo';
+import {Injectable} from '@angular/core';
+import {Todo} from '../models/todo';
+import {environment} from "../../../environments/environment";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Observable<Todo[]> | null = null
+  private todoId: number = 1;
+  private readonly api: string = environment.apiUrl
 
-  async addTodo(title: string): Promise<Todo> {
+  private todoList: Todo[] = [{
+    id: this.todoId++, title: 'serve the app', completed: true,
+  }, {
+    id: this.todoId++, title: 'familiarise yourself with the codebase', completed: false,
+  }, {
+    id: this.todoId++, title: 'start talking to the api', completed: false,
+  },];
+
+  constructor(private readonly http: HttpClient) {
+  }
+
+  getTodos(): Observable<Todo[]> {
+    const observable: Observable<Todo[]> = this.http.get<Todo[]>(this.api + "/przemoai/todo");
+    return observable
+  }
+
+  addTodo(title: string) {
     // TODO: replace with a POST request
     const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
+      id: this.todoId++, title: title, completed: false,
     };
-    this.todoList.push(todo);
 
-    return todo;
+    return this.http.post(this.api + "/przemoai/todo", todo)
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
