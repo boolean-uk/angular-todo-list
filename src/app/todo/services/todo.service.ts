@@ -23,4 +23,8 @@ export class TodoService {
     todo.completed = !todo.completed
     return this.http.put<Todo>(`${environment.apiUrl}/mjklukowski/todo`, todo)
   }
+
+  deleteTodo(todo: Todo): Observable<Todo> {
+    return this.http.delete<Todo>(`${environment.apiUrl}/mjklukowski/todo/${todo.id}`)
+  }
 }

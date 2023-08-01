@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../services/todo.service';
-import { Observable } from 'rxjs';
 import { Todo } from '../model';
 
 @Component({
@@ -23,6 +22,15 @@ export class TodoListComponent implements OnInit {
     this.todoService.addTodo(todo)
       .subscribe(newTodo => {
         this.todos?.push(newTodo)
+      })
+  }
+
+  deleteTodo(todo: Todo) {
+    this.todoService.deleteTodo(todo)
+      .subscribe(deletedTodo => {
+        const index = this.todos?.findIndex(todo => todo.id == deletedTodo.id)
+        if(index != null && index != -1)
+          this.todos?.splice(index, 1)
       })
   }
 }
