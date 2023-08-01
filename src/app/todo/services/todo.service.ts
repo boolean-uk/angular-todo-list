@@ -1,43 +1,43 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  constructor(private readonly http: HttpClient) {
+  this.getAllTodos().then((chars) => (this.todoList = chars));}
+  
+  private todoList: Todo[] = [];
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+    async getAllTodos(): Promise<Todo[]> {
+    const response = await firstValueFrom(
+      this.http.get<Todo[]>(`${environment.apiUrl}`)
+    );
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+    console.log('res', response);
 
-    return todo;
+    return response;
   }
+
+  todos: Promise<Todo[]> = Promise.resolve(this.getAllTodos());
+
+  async addTodo(title: string) {
+    // TODO: replace with a POST request
+    const toCreate = {
+      title: title,
+    };
+    const response = await firstValueFrom(
+      this.http.post(`${environment.apiUrl}`, toCreate)
+    );
+
+    console.log(response)
+  }
+
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     // TODO: replace with a PUT request
@@ -47,6 +47,15 @@ export class TodoService {
     }
     Object.assign(foundTodo, updatedTodo);
 
+    const toCreate = {
+      title: foundTodo.title,
+      completed: foundTodo.completed,
+    };
+    const response = await firstValueFrom(
+      this.http.put(`${environment.apiUrl}/` + `${foundTodo.id}`, toCreate)
+    );
+    console.log(response)
     return foundTodo;
+   
   }
 }
