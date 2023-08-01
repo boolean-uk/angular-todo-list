@@ -19,8 +19,7 @@ export class TodoListComponent{
   //   this.todoService.updateTodo(todo);
   // }
 
-  // async newTodo(title: string) {
-  //   await this.todoService.addTodo(title);
-  //   this.todos = this.todoService.todos;
-  // }
+   newTodo(title: string) {
+   this.todoService.addTodo(title).subscribe((addedTodo) =>console.log(addedTodo, "added "))
+  }
 }
