@@ -12,6 +12,8 @@ export class TodoListComponent {
 
   todos = this.todoService.getTodos();
 
+  showCompleted = false
+
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
@@ -24,5 +26,9 @@ export class TodoListComponent {
   async deleteTodo(todo: Todo) {
     await this.todoService.deleteTodo(todo);
     this.todos = this.todoService.getTodos();
+  }
+
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted
   }
 }
