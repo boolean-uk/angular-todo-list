@@ -22,3 +22,7 @@ implement the following requirements:
 - Refactor the `todo.service.ts` file to fetch the todos from the API
 - Refactor the `todo.service.ts` file to send a POST request to create a new todo
 - Refactor the `todo.service.ts` file send a PUT request to update an existing todo
+
+## Freedom
+
+if you want a bit more of a challenge, check out the freedom branch! It starts from a blank slate.
