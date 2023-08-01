@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Todo } from '../model';
-import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-todo-create',
@@ -12,7 +11,7 @@ export class TodoCreateComponent {
   @Output() onAdd = new EventEmitter<Todo>()
 
   form = this.fb.group({
-    "title": ['']
+    "title": ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[^\s]*\w+[^\s]*$/)]]
   })
 
   constructor(private fb: FormBuilder) {}
