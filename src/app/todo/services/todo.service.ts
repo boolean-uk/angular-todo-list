@@ -34,9 +34,9 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+   // this.todoList.push(todo);
     const response = await firstValueFrom(
-      this.http.post(environment.apiUrl, this.todoList)
+      this.http.post(environment.apiUrl, todo)
     );
 
     console.log(response);
