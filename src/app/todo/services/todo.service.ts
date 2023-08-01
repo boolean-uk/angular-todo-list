@@ -58,4 +58,19 @@ export class TodoService {
       console.error('Error updating todo:', error);
     }
   }
+
+  async deleteTodo(todo: Todo) {
+    try {
+      const response = await this.http
+        .delete<Todo>(this.apiURL + '/' + todo.id)
+        .toPromise();
+
+      if (!response) {
+        throw new Error('Failed to delete todo');
+      }
+      console.log('Deleted todo:', response);
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+    }
+  }
 }
