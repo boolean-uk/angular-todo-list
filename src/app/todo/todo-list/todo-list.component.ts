@@ -19,6 +19,10 @@ export class TodoListComponent implements OnInit {
     await this.todoService.updateTodo(todo);
   }
 
+  async deleteTodo(todo: Todo) {
+    await this.todoService.deleteTodo(todo);
+  }
+
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = await this.todoService.getAllTodos();

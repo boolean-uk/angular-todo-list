@@ -53,26 +53,14 @@ export class TodoService {
     console.log(response);
     return response;
   }
-  //todos: Promise<Todo[]> = Promise.resolve(this.todoList);
 
-  /*async addTodo(title: string): Promise<Todo> {
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  async deleteTodo(todo: Todo): Promise<Todo> {
+    const response = await firstValueFrom(
+      this.http.delete<Todo>(
+        `https://boolean-api-server.fly.dev/RafalHalama/todo/${todo.id}`
+      )
+    );
+    console.log(response);
+    return response;
   }
-
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
-  }*/
 }
