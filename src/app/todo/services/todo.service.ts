@@ -16,16 +16,15 @@ export class TodoService {
   
   async getAllTodos(): Promise<Todo[]> {
     const response = await firstValueFrom(
-      this.http.get<todoResponse>(`${environment.apiUrl}`)
+      this.http.get<Todo[]>(`${environment.apiUrl}`)
     );
 
     console.log('res', response);
 
-    return response.results;
+    return response;
   }
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.getAllTodos())
-  //Promise.resolve(this.todoList);
+  todos: Promise<Todo[]> = this.getAllTodos()
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,26 +33,21 @@ export class TodoService {
       title: title,
       completed: false,
     };
-   // this.todoList.push(todo);
+
     const response = await firstValueFrom(
       this.http.post(environment.apiUrl, todo)
     );
-
+      this.todos=this.getAllTodos()
     console.log("addTodo",response);
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    //Object.assign(foundTodo, updatedTodo);
+  
     const response = await firstValueFrom(
-      this.http.put(environment.apiUrl+foundTodo.id, updatedTodo)
+      this.http.put<Todo>(environment.apiUrl+"/"+updatedTodo.id, updatedTodo)
     );
-    return foundTodo;
+    return response;
   }
 
 }
