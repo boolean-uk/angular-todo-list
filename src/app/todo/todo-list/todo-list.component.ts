@@ -9,9 +9,10 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-  // @Output('showCompleted') showCompleted = new EventEmitter<Todo>();
+  @Output('showCompleted') showCompleted = new EventEmitter();
 
   todos = this.todoService.todos;
+  shouldShowCompleted = false
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -27,7 +28,7 @@ export class TodoListComponent {
     this.todos = this.todoService.todos;
   }
 
-  // showCompleted() {
-  //   this.todoService.;
-  // }
+  printCompleted() {
+    this.shouldShowCompleted != this.shouldShowCompleted
+  }
 }

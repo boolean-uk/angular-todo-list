@@ -1,6 +1,6 @@
 <app-todo-create (newTodo)="newTodo($event)"
-
 ></app-todo-create>
+<button (showCompleted)="printCompleted()">Display completed todos</button>
 <app-todo-item
   *ngFor="let todo of todos | async"
   [todo]="todo"
