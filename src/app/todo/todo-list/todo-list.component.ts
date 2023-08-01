@@ -9,7 +9,7 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-
+  showCompleted = false;
   todos = this.todoService.getTodos();
 
   updateTodo(todo: Todo) {
@@ -25,5 +25,8 @@ export class TodoListComponent {
     await this.todoService.deleteTodo(todo);
     this.todos = this.todoService.getTodos();
 
+  }
+  toggleCompleted(){
+    this.showCompleted = !this.showCompleted;
   }
 }
