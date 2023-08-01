@@ -49,7 +49,13 @@ export class TodoService {
     );
     return response;
   }
-
+  async deleteTodo(deletedTodo: Todo): Promise<Todo> {
+  
+    const response = await firstValueFrom(
+      this.http.delete<Todo>(environment.apiUrl+"/"+deletedTodo.id)
+    );
+    return response;
+  }
 }
 export interface todoResponse {
   count: number;

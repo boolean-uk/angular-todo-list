@@ -13,13 +13,20 @@ export class TodoListComponent {
   }
 
   todos = this.todoService.todos;
+  isNotCompletedVisible:boolean=false 
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
-
+  async deleteTodo(todo: Todo) {
+   await this.todoService.deleteTodo(todo);
+    this.todos=this.todoService.getAllTodos()
+  }
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+  toggleCompleted(){
+    this.isNotCompletedVisible=!this.isNotCompletedVisible;
   }
 }
