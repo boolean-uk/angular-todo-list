@@ -41,12 +41,6 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    // const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    // if (!foundTodo) {
-    //   throw new Error('todo not found');
-    // }
-    // Object.assign(foundTodo, updatedTodo);
     const response = await firstValueFrom(
       this.http.put(`${environment.apiUrl}` + `/${updatedTodo.id}`, updatedTodo)
     )
