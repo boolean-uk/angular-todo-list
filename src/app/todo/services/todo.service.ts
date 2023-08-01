@@ -1,52 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import {catchError, ignoreElements, Observable, of, Subject, switchMap} from 'rxjs';
+import {Todo, UpdateTodo} from '../models/todo';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  constructor(private http: HttpClient) { }
+  private apiUrl = 'https://boolean-api-server.fly.dev';
+  private username = "JakubPawlowskiTalan"; // hardcoded for development purposes
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  addToDo$ = new Subject()
+  addToDoErrors$ = this.addToDo$.pipe(
+    switchMap((todo) => this.http.post<Todo>(`${this.apiUrl}/${this.username}/todo`, todo).pipe(
+      ignoreElements(),
+      catchError(err => of(err))
+    ))
+  )
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  addTodo(taskName: string): void {
+    this.addToDo$.next({ title: taskName })
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  getTodos(): Observable<Todo[]> {
+    const url = `${this.apiUrl}/${this.username}/todo`;
+    return this.http.get<Todo[]>(url);
+  }
 
-    return foundTodo;
+  getTodoById(todoId: number): Observable<Todo> {
+    const url = `${this.apiUrl}/${this.username}/todo/${todoId}`;
+    return this.http.get<Todo>(url);
+  }
+
+  updateTodo(todoId: number, updatedTodo: UpdateTodo): Observable<UpdateTodo> {
+    const url = `${this.apiUrl}/${this.username}/todo/${todoId}`;
+    return this.http.put<UpdateTodo>(url, updatedTodo);
+  }
+
+  deleteTodo(todoId: number): Observable<void> {
+    const url = `${this.apiUrl}/${this.username}/todo/${todoId}`;
+    return this.http.delete<void>(url);
   }
 }

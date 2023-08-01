@@ -1,3 +1,4 @@
+<p *ngIf="addToDoErrors$ | async as error">{{error.error.error}}</p>
 <form #form="ngForm" (ngSubmit)="submit(); form.resetForm()">
   <input
     type="text"
