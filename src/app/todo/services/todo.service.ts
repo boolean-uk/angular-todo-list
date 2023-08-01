@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private todoList: Todo[] = [];
+  constructor(private readonly http: HttpClient) {
+    this.getAllTodos().then((todo) => (this.todoList = todo));
+  }
+  
+  async getAllTodos(): Promise<Todo[]> {
+    const response = await firstValueFrom(
+      this.http.get<todoResponse>(`${environment.apiUrl}`)
+    );
 
+    console.log('res', response);
+
+    return response.results;
+  }
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Promise<Todo[]> = this.getAllTodos()
+  //Promise.resolve(this.todoList);
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -35,7 +35,11 @@ export class TodoService {
       completed: false,
     };
     this.todoList.push(todo);
+    const response = await firstValueFrom(
+      this.http.post(environment.apiUrl, this.todoList)
+    );
 
+    console.log(response);
     return todo;
   }
 
@@ -46,7 +50,16 @@ export class TodoService {
       throw new Error('todo not found');
     }
     Object.assign(foundTodo, updatedTodo);
-
+    const response = await firstValueFrom(
+      this.http.put('https://boolean-api-server.fly.dev/auenc/todo/1', foundTodo)
+    );
     return foundTodo;
   }
+
+}
+export interface todoResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Todo[];
 }
