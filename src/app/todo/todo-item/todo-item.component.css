@@ -1,0 +1,39 @@
+:host {
+    display: flex;
+    padding: 1rem 0.5rem;
+    border: 1px solid #dfb35d;
+    border-radius: 4px;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.content {
+    flex: 1
+}
+
+.checkmark,
+.delete {
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+} 
+
+.checkmark {
+    background-color: #2fd52f;
+}
+
+.delete {
+    background-color: #ee2e2e;
+    cursor: pointer;
+}
+
+.delete svg,
+.checkmark svg {
+    margin-right: 0.25rem;
+    display: inline-block
+}

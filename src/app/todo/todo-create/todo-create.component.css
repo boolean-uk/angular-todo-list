@@ -1,0 +1,24 @@
+form {
+    display: flex;
+    gap: 1rem;
+    border: 1px solid #dfb35d;
+    border-radius: 4px;
+    padding: 1rem 0.5rem;
+}
+
+input {
+    flex: 1;
+    border: none;
+}
+
+input.ng-invalid.ng-dirty {
+    color: red;
+}
+
+button {
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    background-color: #dfb35d;
+    cursor: pointer;
+}
