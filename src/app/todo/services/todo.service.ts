@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
 
 @Injectable({
@@ -6,6 +7,9 @@ import { Todo } from '../models/todo';
 })
 export class TodoService {
   private todoId = 1;
+  private apiUrl = 'https://boolean-api-server.fly.dev';
+  constructor(private http: HttpClient) {}
+  
   private todoList: Todo[] = [
     {
       id: this.todoId++,
@@ -26,27 +30,31 @@ export class TodoService {
 
   // TODO replace with a get request
   todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
-  }
+      const todo = {
+        id: this.todoId++,
+        title: title,
+        completed: false,
+      };
+      await this.http.post(this.apiUrl, todo).toPromise();
+      this.todoList.push(todo);
+  
+      return todo;
+    }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
+      const url = `${this.apiUrl}/${updatedTodo.id}`;
+      await this.http.put(url, updatedTodo).toPromise();
+      const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+      if (!foundTodo) {
+        throw new Error('todo not found');
+      }
+      Object.assign(foundTodo, updatedTodo);
+  
+      return foundTodo;
     }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
-  }
 }
