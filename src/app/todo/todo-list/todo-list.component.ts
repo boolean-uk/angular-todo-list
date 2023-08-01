@@ -26,20 +26,27 @@ export class TodoListComponent implements OnInit {
   async deleteTodo(todo: Todo) {
     await this.todoService.deleteTodo(todo);
     if (this.todos) {
-      this.todos = this.todos.filter((item) => item.id !== todo.id);
+      this.todos = this.todos
+        .filter((item) => item.id !== todo.id)
+        .filter((todo) => todo.completed === this.todosStatus);
+      this.todosFiltered = this.todos;
     }
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = await this.todoService.getAllTodos();
+    this.todosFiltered = this.todos.filter(
+      (todo) => todo.completed === this.todosStatus
+    );
   }
 
-  async toggleCompleted() {
+  toggleCompleted() {
     if (this.todos) {
       this.todosFiltered = this.todos.filter(
         (todo) => todo.completed === this.todosStatus
       );
     }
+    this.todosStatus = !this.todosStatus;
   }
 }
