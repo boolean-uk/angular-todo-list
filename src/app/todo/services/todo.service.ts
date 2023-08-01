@@ -23,7 +23,6 @@ export class TodoService {
     return response;
   }
 
-  // TODO replace with a get request
   todos: Promise<Todo[]> = this.getAllTodos();
 
   async addTodo(title: string): Promise<Todo> {
@@ -39,7 +38,6 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // do not know how to solve it other way
     const temp = await this.getAllTodos();
     const foundTodo = temp.find((todo) => todo.id === updatedTodo.id);
     if (!foundTodo) {
@@ -55,5 +53,12 @@ export class TodoService {
     );
 
     return foundTodo;
+  }
+
+  async deleteTodo(todo: Todo): Promise<Todo> {
+    const response = await firstValueFrom(
+      this.http.delete(`${environment.apiUrl}/todo/${todo.id}`)
+    );
+    return todo;
   }
 }
