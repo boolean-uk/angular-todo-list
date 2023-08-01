@@ -1,8 +1,11 @@
 <div class="todo-list">
-  <app-todo-item
-    *ngFor="let todo of todos"
-    [todo]="todo"
-    (onDelete)="deleteTodo($event)"
-  ></app-todo-item>
+  <app-todo-filter (onChange)="filterTodo($event)"></app-todo-filter>
+  <ng-container *ngFor="let todo of todos">
+    <app-todo-item
+      *ngIf="todoFilter(todo)"
+      [todo]="todo"
+      (onDelete)="deleteTodo($event)"
+    ></app-todo-item>
+  </ng-container>
   <app-todo-create (onAdd)="addTodo($event)"></app-todo-create>
 </div>

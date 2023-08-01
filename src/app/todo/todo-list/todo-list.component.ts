@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../model';
+import { TodoFilter, uncompletedTodoFilter } from '../todo-filter/todo-filter.component';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,6 +11,7 @@ import { Todo } from '../model';
 export class TodoListComponent implements OnInit {
 
   todos?: Todo[]
+  todoFilter = uncompletedTodoFilter
 
   constructor(private todoService: TodoService) {}
 
@@ -32,5 +34,9 @@ export class TodoListComponent implements OnInit {
         if(index != null && index != -1)
           this.todos?.splice(index, 1)
       })
+  }
+
+  filterTodo(todoFilter: TodoFilter) {
+    this.todoFilter = todoFilter
   }
 }

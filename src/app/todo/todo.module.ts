@@ -5,6 +5,7 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoCreateComponent } from './todo-create/todo-create.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TodoFilterComponent } from './todo-filter/todo-filter.component';
 
 
 
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [
     TodoListComponent,
     TodoItemComponent,
-    TodoCreateComponent
+    TodoCreateComponent,
+    TodoFilterComponent
   ],
   imports: [
     CommonModule,
