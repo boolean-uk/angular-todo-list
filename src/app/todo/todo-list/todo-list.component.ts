@@ -10,19 +10,19 @@ import { Todo } from '../models/todo';
 export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService) {}
 
-  // todos = this.todoService.todos;
-  todos: Todo[] | null = null
+  todos: Todo[] | null = null;
 
   async ngOnInit(): Promise<void> {
     this.todos = await this.todoService.getAllTodos();
   }
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.todos = await this.todoService.getAllTodos();
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    // this.todos = this.todoService.todos;
+    this.todos = await this.todoService.getAllTodos();
   }
 }
