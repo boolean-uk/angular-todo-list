@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Todo } from './todo/models/todo';
+import { TodoService } from './todo/services/todo.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-todo-list';
+  constructor(private readonly todoService: TodoService) {}
+
+  todos: any | null = null;
+  todos$: Promise<Todo[]> =
+    this.todoService.getAllTodos();
+
+  ngOnInit() {
+    this.todos = this.todoService.getAllTodos();
+  }
 }
