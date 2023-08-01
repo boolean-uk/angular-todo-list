@@ -7,11 +7,15 @@ import { TodoService } from '../services/todo.service';
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
-  @Output('newTodo') newTodo = new EventEmitter<string>();
+  constructor(private readonly todoService: TodoService) {}
 
+  @Output() newTodo = new EventEmitter<string>();
   todo: string = '';
 
   submit() {
-    this.newTodo.emit(this.todo);
+    if (this.todo.trim() !== '') {
+      this.newTodo.emit(this.todo.trim());
+      this.todo = '';
+    }
   }
 }
