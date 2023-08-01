@@ -9,6 +9,7 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService) {}
+  viewCompleted: boolean = false;
 
   todos: any | null = null;
 
@@ -28,5 +29,9 @@ export class TodoListComponent implements OnInit {
 
   async ngOnInit() {
     this.todos = this.todoService.getAllTodos();
+  }
+
+  toggleVisibility(): void {
+    this.viewCompleted = !this.viewCompleted;
   }
 }
