@@ -28,4 +28,12 @@ export class TodoListComponent implements OnInit {
     await this.todoService.deleteTodo(todo);
     this.todos = await this.todoService.getAllTodos();
   }
+  async filterTodosFalse() {
+    this.todos = await this.todoService.filterTodosFalse(await this.todoService.getAllTodos());
+  }
+  async filterTodosTrue() {
+    this.todos = await this.todoService.filterTodosTrue(await this.todoService.getAllTodos());
+  }
+
+
 }

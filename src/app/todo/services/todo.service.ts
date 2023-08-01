@@ -92,6 +92,11 @@ export class TodoService {
       this.http.delete<void>(`https://boolean-api-server.fly.dev/aronskay/todo/${todo.id}`)
     );
   }
-  
+ filterTodosFalse(todos:Todo[]) {
+    return todos.filter(todo => todo.completed === false);
+  }
+  filterTodosTrue(todos:Todo[]) {
+    return todos.filter(todo => todo.completed === true);
+  }
 
 }

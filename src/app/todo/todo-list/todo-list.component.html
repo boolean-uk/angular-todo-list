@@ -1,4 +1,6 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click) = "filterTodosFalse()">Show incomplete</button>
+<button (click) = "filterTodosTrue()">Show complete</button>
 <app-todo-item
   *ngFor="let todo of todos"
   [todo]="todo"
