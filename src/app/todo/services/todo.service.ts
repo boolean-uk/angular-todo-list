@@ -20,8 +20,9 @@ export class TodoService {
   }
 
   toggleTodo(todo: Todo): Observable<Todo> {
-    todo.completed = !todo.completed
-    return this.http.put<Todo>(`${environment.apiUrl}/mjklukowski/todo`, todo)
+    const newTodo = structuredClone(todo)
+    newTodo.completed = !newTodo.completed
+    return this.http.put<Todo>(`${environment.apiUrl}/mjklukowski/todo/${todo.id}`, newTodo)
   }
 
   deleteTodo(todo: Todo): Observable<Todo> {
