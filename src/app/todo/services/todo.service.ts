@@ -1,17 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Todo } from '@app/todo/models/todo';
-import {
-  BehaviorSubject,
-  catchError,
-  ignoreElements,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment as env } from '@env/environment';
+import {Injectable} from '@angular/core';
+import {Todo} from '@app/todo/models/todo';
+import {BehaviorSubject, catchError, ignoreElements, Observable, of, Subject, switchMap, tap,} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {environment as env} from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -31,15 +22,12 @@ export class TodoService {
     switchMap(() => this.http.get<Todo[]>(this.url()))
   );
 
-  constructor(private readonly http: HttpClient) {}
-
-  get errs() {
-    return this.updateErrs$;
+  constructor(private readonly http: HttpClient) {
   }
 
   add(title: string): Observable<Todo> {
     return this.http
-      .post<Todo>(this.url(), { title })
+      .post<Todo>(this.url(), {title})
       .pipe(tap(() => this.refresh$.next()));
   }
 
