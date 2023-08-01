@@ -9,7 +9,7 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
-
+  @Output('delete') delete = new EventEmitter<Todo>();
   toggleCompleted() {
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
@@ -19,4 +19,11 @@ export class TodoItemComponent {
       completed: !this.todo.completed,
     });
   }
+
+  buttonDelete() {
+    if (!this.todo) {
+      throw new Error('cannot delete null');
+    }
+    this.delete.emit(this.todo)
+    }
 }
