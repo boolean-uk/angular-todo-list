@@ -1,5 +1,6 @@
 <ng-template [ngIf]="todo">
   <span>{{ todo.title }}</span>
+  <button (click)="deleteTodo()">Delete task</button>  
   <input
     type="checkbox"
     (click)="toggleCompleted()"
