@@ -1,0 +1,22 @@
+<app-create-todo (todoCreated)="handleCreateTodo()"></app-create-todo>
+
+<app-todo-item
+  *ngFor="let todo of displayedTodos"
+  [todo]="todo"
+></app-todo-item>
+
+<form>
+  <label for="show-completed">Show completed todos</label>
+  <input
+    type="checkbox"
+    name="show-completed"
+    (click)="toggleShowCompleted()"
+    checked
+    *ngIf="showCompleted"
+  />
+  <input
+    type="checkbox"
+    (click)="toggleShowCompleted()"
+    *ngIf="!showCompleted"
+  />
+</form>
