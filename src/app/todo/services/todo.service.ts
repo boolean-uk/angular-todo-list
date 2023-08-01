@@ -37,6 +37,7 @@ export class TodoService {
     return response;
   }
   async updateTodo(todo: Todo): Promise<Todo> {
+    console.log(todo.id + ' ' + todo.title);
     const toCreate = {
       id: todo.id,
       title: todo.title,
@@ -44,7 +45,7 @@ export class TodoService {
     };
     const response = await firstValueFrom(
       this.http.put<Todo>(
-        'https://boolean-api-server.fly.dev/RafalHalama/todo',
+        `https://boolean-api-server.fly.dev/RafalHalama/todo/${todo.id}`,
         toCreate
       )
     );
