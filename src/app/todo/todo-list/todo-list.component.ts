@@ -20,4 +20,10 @@ export class TodoListComponent {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.getTodos();
   }
+
+  async deleteTodo(todo: Todo){
+    await this.todoService.deleteTodo(todo);
+    this.todos = this.todoService.getTodos();
+
+  }
 }

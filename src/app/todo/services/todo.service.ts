@@ -77,9 +77,16 @@ export class TodoService {
 
   async updateTodo(updatedTodo: Todo) {
     try {
-      const response = await this.http.put<Todo>(`${this.apiUrl}/KarolinaMaczka/todos/${updatedTodo.id}`, updatedTodo).toPromise();
+      const response = await this.http.put<Todo>(`${this.apiUrl}/KarolinaMaczka/todo/${updatedTodo.id}`, updatedTodo).toPromise();
     } catch (error) {
       console.error('Error updating todo:', error);
+    }
+  }
+  async deleteTodo(deletedTodo: Todo){
+    try {
+      const response = await this.http.delete<Todo>(`${this.apiUrl}/KarolinaMaczka/todo/${deletedTodo.id}`).toPromise();
+    } catch (error) {
+      console.error('Error deleting todo:', error);
     }
   }
 }
