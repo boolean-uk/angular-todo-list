@@ -11,6 +11,7 @@ export class TodoListComponent implements OnInit{
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.getTodo();
+  toggle: boolean = false;
 
   ngOnInit() {
   }
