@@ -1,49 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, map, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private apiUrl = 'https://boolean-api-server.fly.dev';
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
-
+  private apiUrl = 'https://boolean-api-server.fly.dev/annsperkach/todo';
+  
+  async getCompletedTodos(): Promise<Todo[]> {
+    const response = await firstValueFrom(
+      this.http.get<Todo[]>(this.apiUrl)
+    );
+    console.log('res', response);
+    return response.filter((el) => el.completed);
+  }
+  
   constructor(private http: HttpClient) {}
 
-  getTodos(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(this.apiUrl);
-  }
-
-  addTodo(title: string): Observable<Todo> {
+  async addTodo(title: string){
     const todo = {
-      id: this.todoId++,
       title: title,
-      completed: false,
     };
-    return this.http.post<Todo>(this.apiUrl, todo);
+    const response = await firstValueFrom(
+      this.http.post(this.apiUrl, todo)
+    );
+    console.log(response);
   }
 
-  updateTodo(updatedTodo: Todo): Observable<Todo> {
-    const url = `${this.apiUrl}/${updatedTodo.id}`;
-    return this.http.put<Todo>(url, updatedTodo);
+  async updateTodo(updatedTodo: Todo) {
+    const response = await firstValueFrom(
+      this.http.put(this.apiUrl + '/' + updatedTodo.id,updatedTodo)
+    );
+    console.log(response);
+  }
+
+  async deleteTodo(id: number) {
+    const response = await firstValueFrom(
+      this.http.delete(this.apiUrl + '/' + id)
+    );
+    console.log(response);
   }
 }
