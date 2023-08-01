@@ -1,0 +1,3 @@
+<app-create-todo (createTodo)="handleCreateTodo()"></app-create-todo>
+
+<app-todo-item *ngFor="let todo of todoList | async" [todo]="todo"></app-todo-item> 
