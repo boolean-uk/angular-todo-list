@@ -50,4 +50,18 @@ export class TodoService {
       console.error('Error updating todo', error)
     }
   }
+
+  //delete
+  async deleteTodo(deleteTodo: Todo) {
+    const foundTodo = (await this.getTodos()).find((todo) => todo.id === deleteTodo.id);
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+    try{
+      const response = await this.http.delete<Todo>(`${environment.apiUrl}/juliagirejko/todo/` + foundTodo.id).toPromise()
+    }
+    catch(error) {
+      console.error('Error deleting todo', error)
+    }
+  }
 }
