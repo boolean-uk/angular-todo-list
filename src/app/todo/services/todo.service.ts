@@ -34,7 +34,8 @@ export class TodoService {
     const response = await firstValueFrom(
       this.http.post(`${environment.apiUrl}`, toCreate)
     );
-
+    
+    this.getAllTodos().then((chars) => (this.todoList = chars));
     console.log(response)
   }
 
