@@ -8,45 +8,49 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent implements OnInit {
-  constructor(private readonly todoService: TodoService) {}
-
   todos: Todo[] | null = null;
   todosFiltered: Todo[] | null = null;
   todosStatus: boolean = false;
-  async ngOnInit() {
-    this.todos = await this.todoService.getAllTodos();
-    this.todosFiltered = this.todos.filter((todo) => !todo.completed);
 
-    console.log(this.todos);
+  constructor(private readonly todoService: TodoService) {}
+
+  async ngOnInit() {
+    await this.loadTodos();
   }
+
+  async loadTodos() {
+    this.todos = await this.todoService.getAllTodos();
+    this.filterTodos();
+  }
+
   async updateTodo(todo: Todo) {
     await this.todoService.updateTodo(todo);
+    this.filterTodos();
   }
 
   async deleteTodo(todo: Todo) {
     await this.todoService.deleteTodo(todo);
     if (this.todos) {
-      this.todos = this.todos
-        .filter((item) => item.id !== todo.id)
-        .filter((todo) => todo.completed === this.todosStatus);
-      this.todosFiltered = this.todos;
+      this.todos = this.todos.filter((item) => item.id !== todo.id);
+      this.filterTodos();
     }
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = await this.todoService.getAllTodos();
-    this.todosFiltered = this.todos.filter(
-      (todo) => todo.completed === this.todosStatus
-    );
+    await this.loadTodos();
   }
 
   toggleCompleted() {
+    this.todosStatus = !this.todosStatus;
+    this.filterTodos();
+  }
+
+  filterTodos() {
     if (this.todos) {
       this.todosFiltered = this.todos.filter(
         (todo) => todo.completed === this.todosStatus
       );
     }
-    this.todosStatus = !this.todosStatus;
   }
 }
