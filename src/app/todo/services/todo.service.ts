@@ -17,13 +17,9 @@ export class TodoService {
     const response = await firstValueFrom(
       this.http.get<Todo[]>(`${environment.apiUrl}/todo`)
     );
-
-    console.log('res', response);
-
     return response;
   }
 
-  // TODO replace with a get request
   todos: Promise<Todo[]> = this.getAllTodos();
 
   async addTodo(title: string): Promise<Todo> {
@@ -39,22 +35,15 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // do not know how to solve it other way
-    const temp = await this.getAllTodos();
-    const foundTodo = temp.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
     const toCreate = {
-      id: foundTodo.id,
-      title: foundTodo.title,
-      completed: !foundTodo.completed,
+      id: updatedTodo.id,
+      title: updatedTodo.title,
+      completed: !updatedTodo.completed,
     }
     const response = await firstValueFrom(
       this.http.put(`${environment.apiUrl}/todo/${toCreate.id}`, toCreate)
     );
-
-    return foundTodo;
+    return updatedTodo;
   }
 
   async deleteTodo(todo: Todo): Promise<Todo> {

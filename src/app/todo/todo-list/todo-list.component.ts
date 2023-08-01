@@ -8,10 +8,10 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent implements OnInit {
-  constructor(private readonly todoService: TodoService) {}
   viewCompleted: boolean = false;
-
   todos: any | null = null;
+  
+  constructor(private readonly todoService: TodoService) {}
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
