@@ -21,6 +21,11 @@ export class TodoListComponent implements OnInit {
     this.todos = this.todoService.getAllTodos();
   }
 
+  async deleteTodo(todo: Todo) {
+    await this.todoService.deleteTodo(todo);
+    this.todos = this.todoService.getAllTodos();
+  }
+
   async ngOnInit() {
     this.todos = this.todoService.getAllTodos();
   }
