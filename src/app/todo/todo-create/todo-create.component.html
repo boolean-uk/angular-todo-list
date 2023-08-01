@@ -1,4 +1,10 @@
 <form (ngSubmit)="add()" [formGroup]="form">
-  <input id="title" type="text" name="title" formControlName="title" />
+  <input
+    id="title"
+    type="text"
+    name="title"
+    placeholder="Add new todo here..."
+    formControlName="title"
+  />
   <button type="submit">Add</button>
 </form>

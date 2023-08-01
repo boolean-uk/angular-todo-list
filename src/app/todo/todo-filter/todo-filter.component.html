@@ -1,9 +1,25 @@
 <div class="todo-filter">
-  <div class="completed" (click)="setFilter(filters.completedTodoFilter)">
-    Completed
-  </div>
-  <div class="not-completed" (click)="setFilter(filters.uncompletedTodoFilter)">
+  <div
+    class="not-completed"
+    [ngClass]="
+      currentFilter === filters.uncompletedTodoFilter ? 'selected' : ''
+    "
+    (click)="setFilter(filters.uncompletedTodoFilter)"
+  >
     Not completed
   </div>
-  <div class="all" (click)="setFilter(filters.allTodoFilter)">All</div>
+  <div
+    class="completed"
+    [ngClass]="currentFilter === filters.completedTodoFilter ? 'selected' : ''"
+    (click)="setFilter(filters.completedTodoFilter)"
+  >
+    Completed
+  </div>
+  <div
+    class="all"
+    [ngClass]="currentFilter === filters.allTodoFilter ? 'selected' : ''"
+    (click)="setFilter(filters.allTodoFilter)"
+  >
+    All
+  </div>
 </div>

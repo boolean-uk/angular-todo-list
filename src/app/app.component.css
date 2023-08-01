@@ -1,0 +1,10 @@
+main {
+    width: 70%;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    text-align: center;
+}

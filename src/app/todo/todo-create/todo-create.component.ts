@@ -11,7 +11,7 @@ export class TodoCreateComponent {
   @Output() onAdd = new EventEmitter<Todo>()
 
   form = this.fb.group({
-    "title": ['', [Validators.required, Validators.minLength(1), Validators.pattern(/^[^\s]*\w+[^\s]*$/)]]
+    "title": ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[^\s]*\w+[^\s]*$/)]]
   })
 
   constructor(private fb: FormBuilder) {}
@@ -21,5 +21,6 @@ export class TodoCreateComponent {
       return
     
     this.onAdd.emit(this.form.value as Todo);
+    this.form.reset();
   }
 }

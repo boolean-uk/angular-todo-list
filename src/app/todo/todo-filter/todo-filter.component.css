@@ -1,0 +1,21 @@
+:host {
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.todo-filter {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.todo-filter > div {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dfb35d;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.todo-filter > div:hover,
+.todo-filter > div.selected {
+    background-color: #dfb35d;
+}

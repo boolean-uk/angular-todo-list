@@ -9,6 +9,8 @@ import { Todo } from '../model';
 export class TodoFilterComponent {
   @Output() onChange = new EventEmitter<TodoFilter>()
 
+  currentFilter: TodoFilter = uncompletedTodoFilter
+
   filters = {
     allTodoFilter,
     completedTodoFilter,
@@ -16,6 +18,7 @@ export class TodoFilterComponent {
   }
 
   setFilter(todoFilter: TodoFilter) {
+    this.currentFilter = todoFilter
     this.onChange.emit(todoFilter)
   }
 }
