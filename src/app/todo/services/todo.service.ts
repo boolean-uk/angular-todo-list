@@ -31,4 +31,10 @@ export class TodoService {
       tap(() => this.refresh$.next())
     )
   }
+
+  deleteTodo(id: number): Observable<Todo> {
+    return this.http.delete<Todo>(`${environment.apiUrl}/wer08/todo/${id}`).pipe(
+      tap(() => this.refresh$.next())
+    )
+  }
 }

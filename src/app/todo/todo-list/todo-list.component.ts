@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class TodoListComponent {
   todos$: Observable<Todo[]> | null = this.todoService.todos$
+  showCompleted = false
 
   constructor(private readonly todoService: TodoService) { }
 
@@ -19,5 +20,12 @@ export class TodoListComponent {
 
   newTodo(title: string) {
     this.todoService.addTodo(title).subscribe();
+  }
+
+  deleteTodo(id: number) {
+    this.todoService.deleteTodo(id).subscribe();
+  }
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted;
   }
 }
