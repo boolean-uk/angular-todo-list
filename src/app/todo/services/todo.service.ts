@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
 import { environment } from 'src/environments/environment.development';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +9,6 @@ import { Observable } from 'rxjs';
 export class TodoService {
   private readonly apiURL = environment.apiUrl;
   private todoId = 1;
-  todos: Observable<Todo[]> | null = null;
 
   constructor(private http: HttpClient) {}
 
