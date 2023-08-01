@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { TodoService } from '../services/todo.service';
+import { Component, OnInit } from '@angular/core';
+import { TodoErrorResponse, TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -8,16 +9,27 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  todos$: Observable<Todo[]> | null = this.todoService.todos$
+  todosError$: Observable<TodoErrorResponse | null> | null = this.todoService.todosError
 
-  todos = this.todoService.todos;
+  showCompleted = false
+
+  constructor(private readonly todoService: TodoService) { }
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo).subscribe();
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+  newTodo(title: string) {
+    this.todoService.addTodo(title).subscribe();
   }
+
+  deleteTodo(id: number) {
+    this.todoService.deleteTodo(id).subscribe();
+  }
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted;
+  }
+
+
 }
