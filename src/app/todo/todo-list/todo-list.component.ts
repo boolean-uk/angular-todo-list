@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TodoService} from "@app/todo/services/todo.service";
-import {Todo} from "@app/todo/models/todo";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TodoService } from '@app/todo/services/todo.service';
+import { Todo } from '@app/todo/models/todo';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -14,22 +14,24 @@ export class TodoListComponent implements OnInit, OnDestroy {
   updateErrs$ = this.todoService.errs;
   completedFilter = false;
 
-  constructor(private readonly todoService: TodoService) {
-  }
+  constructor(private readonly todoService: TodoService) {}
 
   toggleTodoFilter() {
     this.completedFilter = !this.completedFilter;
   }
 
+  getFilteredTodos() {
+    return this.todos.filter((t) => t.completed === this.completedFilter);
+  }
+
   ngOnInit(): void {
-    const sub = this.todoService.getAll(this.completedFilter)
-      .subscribe(todos => {
-        this.todos = todos;
-      });
+    const sub = this.todoService.getAll().subscribe((todos) => {
+      this.todos = todos;
+    });
     this.subs.push(sub);
   }
 
   ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
+    this.subs.forEach((s) => s.unsubscribe());
   }
 }

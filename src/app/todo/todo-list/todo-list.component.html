@@ -1,9 +1,6 @@
-<app-todo-create/>
-<p
-  *ngIf="updateErrs$ | async as errs"
->{{ errs | json }}</p>
-<button (click)="toggleTodoFilter()" type="button">Show {{ completedFilter ? 'incomplete' : 'complete' }}</button>
-<app-todo-item
-  *ngFor="let todo of todos"
-  [todo]="todo"
-/>
+<app-todo-create />
+<p *ngIf="updateErrs$ | async as errs">{{ errs | json }}</p>
+<button (click)="toggleTodoFilter()" type="button">
+  Show {{ completedFilter ? "incomplete" : "complete" }}
+</button>
+<app-todo-item *ngFor="let todo of getFilteredTodos()" [todo]="todo" />
