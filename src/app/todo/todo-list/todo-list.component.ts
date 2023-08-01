@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -9,6 +9,7 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  // @Output('showCompleted') showCompleted = new EventEmitter<Todo>();
 
   todos = this.todoService.todos;
 
@@ -20,4 +21,13 @@ export class TodoListComponent {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
   }
+
+  async deleteTodo(todo: Todo) {
+    await this.todoService.deleteTodo(todo);
+    this.todos = this.todoService.todos;
+  }
+
+  // showCompleted() {
+  //   this.todoService.;
+  // }
 }

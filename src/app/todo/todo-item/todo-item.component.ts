@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Todo } from '../models/todo';
+import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-todo-item',
@@ -9,6 +10,9 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  @Output('delete') delete = new EventEmitter<Todo>();
+
+  constructor(private readonly todoService: TodoService) {}
 
   toggleCompleted() {
     if (!this.todo) {
@@ -17,6 +21,15 @@ export class TodoItemComponent {
     this.update.emit({
       ...this.todo,
       completed: !this.todo.completed,
+    });
+  }
+
+  deleteCompleted() {
+    if (!this.todo) {
+      throw new Error('cannot delete null');
+    }
+    this.delete.emit({
+      ...this.todo
     });
   }
 }
