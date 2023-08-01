@@ -4,5 +4,7 @@
     type="checkbox"
     (click)="toggleCompleted()"
     [(ngModel)]="todo.completed"
+    
   />
+  <button (click)="deleteTodo()">Delete</button>
 </ng-template>
