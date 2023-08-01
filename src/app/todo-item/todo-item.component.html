@@ -1,3 +1,11 @@
 <li>
-    {{todo.title}} <input type="checkbox" (click)="updateTodo()">
+  {{ todo.title }}
+  <input
+    type="checkbox"
+    (click)="updateTodo()"
+    checked
+    *ngIf="todo.completed"
+  />
+  <input type="checkbox" (click)="updateTodo()" *ngIf="!todo.completed" />
+  <button (click)="deleteTodo()">delete</button>
 </li>

@@ -15,4 +15,8 @@ export class TodoItemComponent {
     this.todo.completed = !this.todo.completed
     this.todoService.updateTodo(this.todo)
   }
+
+  deleteTodo() {
+    this.todoService.deleteTodo(this.todo);
+  }
 }

@@ -4,19 +4,33 @@ import { Todo, TodoService } from 'app/todo.service';
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.css']
+  styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  todoList : any | null= null;
+  todoList: any | null = null;
+  displayedTodos: any | null = null;
+  showCompleted: boolean;
 
-  constructor(private todoService : TodoService){
-    this.getAllTodos()
+  constructor(private todoService: TodoService) {
+    this.getAllTodos();
+    this.showCompleted = false;
   }
-  getAllTodos(){
-    this.todoList = this.todoService.getAllTodos()
+
+  async getAllTodos() {
+    this.todoList = await this.todoService.getAllTodos();
+    this.displayedTodos = [...this.todoList];
   }
-  handleCreateTodo(){
-    this.getAllTodos()
+
+  handleCreateTodo() {
+    this.getAllTodos();
+  }
+
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted;
+    if (this.todoList) {
+      this.displayedTodos = this.showCompleted
+        ? [...this.todoList]
+        : this.todoList.filter((todo: Todo) => !todo.completed);
+    }
   }
 }
-
