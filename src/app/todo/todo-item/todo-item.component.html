@@ -5,4 +5,9 @@
     (click)="toggleCompleted()"
     [(ngModel)]="todo.completed"
   />
+  <input
+    type="button"
+    (click)="deleteCompleted()"
+    value='remove'
+  />
 </ng-template>
