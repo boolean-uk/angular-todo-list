@@ -12,12 +12,12 @@ export class TodoService {
 
   async getAllTodos(): Promise<Todo[]> {
     const response = await firstValueFrom(
-      this.http.get<toDoResponse>(`${environment.apiUrl}`)
+      this.http.get<Todo[]>(`${environment.apiUrl}`)
     );
 
     console.log('res', response);
 
-    return response.results;
+    return response;
   }
 
   async addTodo(title: String): Promise<Todo> {
@@ -28,6 +28,22 @@ export class TodoService {
     };
     const response = await firstValueFrom(
       this.http.post<Todo>(
+        'https://boolean-api-server.fly.dev/RafalHalama/todo',
+        toCreate
+      )
+    );
+
+    console.log(response);
+    return response;
+  }
+  async updateTodo(todo: Todo): Promise<Todo> {
+    const toCreate = {
+      id: todo.id,
+      title: todo.title,
+      completed: true,
+    };
+    const response = await firstValueFrom(
+      this.http.put<Todo>(
         'https://boolean-api-server.fly.dev/RafalHalama/todo',
         toCreate
       )
@@ -58,7 +74,4 @@ export class TodoService {
 
     return foundTodo;
   }*/
-}
-export interface toDoResponse {
-  results: Todo[];
 }

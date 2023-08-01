@@ -13,11 +13,12 @@ export class TodoListComponent implements OnInit {
   todos: Todo[] | null = null;
   async ngOnInit() {
     this.todos = await this.todoService.getAllTodos();
+    console.log(this.todos);
   }
-  /*updateTodo(todo: Todo) {
+  async updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
-*/
+
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = await this.todoService.getAllTodos();
