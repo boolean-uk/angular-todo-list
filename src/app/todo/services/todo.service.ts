@@ -1,34 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
-
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  constructor(private readonly http: HttpClient) {}
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  async getAllTodos(): Promise<Todo[]> {
+    const response = await firstValueFrom(
+      this.http.get<toDoResponse>(`${environment.apiUrl}`)
+    );
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
+    console.log('res', response);
+
+    return response.results;
+  }
+
+  async addTodo(title: String): Promise<Todo> {
+    const toCreate = {
+      id: this.todoId++,
+      title: title,
+      completed: false,
+    };
+    const response = await firstValueFrom(
+      this.http.post<Todo>(
+        'https://boolean-api-server.fly.dev/RafalHalama/todo',
+        toCreate
+      )
+    );
+
+    console.log(response);
+    return response;
+  }
+  //todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+
+  /*async addTodo(title: string): Promise<Todo> {
     const todo = {
       id: this.todoId++,
       title: title,
@@ -40,7 +50,6 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
     const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
     if (!foundTodo) {
       throw new Error('todo not found');
@@ -48,5 +57,8 @@ export class TodoService {
     Object.assign(foundTodo, updatedTodo);
 
     return foundTodo;
-  }
+  }*/
+}
+export interface toDoResponse {
+  results: Todo[];
 }
