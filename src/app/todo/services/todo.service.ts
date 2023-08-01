@@ -38,8 +38,6 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    console.log(updatedTodo);
-    console.log(this.todoList);
     const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
     if (!foundTodo) {
       throw new Error('todo not found');
