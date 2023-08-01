@@ -19,7 +19,7 @@ export class TodoService {
 
   async getAllTodos() {
     this.todoList = await firstValueFrom(
-      this.http.get<Todo[]>(environment.apiUrl + USER + TODO_ENDPOINT)
+      this.http.get<Todo[]>(environment.apiUrl + USER + TODO_ENDPOINT),
     );
     return this.todoList;
   }
@@ -32,9 +32,23 @@ export class TodoService {
     };
 
     const newTodo = await firstValueFrom(
-      this.http.post<Todo>(environment.apiUrl + USER + TODO_ENDPOINT, todo)
+      this.http.post<Todo>(environment.apiUrl + USER + TODO_ENDPOINT, todo),
     );
     return newTodo;
+  }
+
+  async deleteTodo(todoToDelete: Todo): Promise<Todo> {
+    const foundTodo = this.todoList.find((todo) => todo.id === todoToDelete.id);
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+
+    const deletedTodo = await firstValueFrom(
+      this.http.delete<Todo>(
+        environment.apiUrl + USER + TODO_ENDPOINT + '/' + foundTodo.id,
+      ),
+    );
+    return deletedTodo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
@@ -45,13 +59,9 @@ export class TodoService {
 
     const newTodo = await firstValueFrom(
       this.http.put<Todo>(
-        environment.apiUrl +
-          USER +
-          TODO_ENDPOINT +
-          '/' +
-          updatedTodo.id.toString(),
-        updatedTodo
-      )
+        environment.apiUrl + USER + TODO_ENDPOINT + '/' + updatedTodo.id,
+        updatedTodo,
+      ),
     );
 
     return newTodo;
