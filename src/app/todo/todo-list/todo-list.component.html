@@ -1,8 +1,10 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<span>Show completed</span>
+<input type="checkbox" (click)="toggleCompleted()"/>
 <div *ngFor="let todo of todos | async">
   <app-todo-item [todo]="todo" 
   (update)="updateTodo($event)"
   (delete)="deleteTodo($event)"
-  *ngIf="!todo.completed"></app-todo-item>
+  *ngIf="todo.completed == showCompleted"></app-todo-item>
 </div>
 
