@@ -9,7 +9,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent implements OnInit {
+  [x: string]: any;
   todos: Observable<Todo[]> | null = this.todoService.todos;
+  allVisible = false;
 
   constructor(private readonly todoService: TodoService) {}
 
@@ -37,5 +39,9 @@ export class TodoListComponent implements OnInit {
       },
       complete: () => {},
     });
+  }
+
+  showCompleted() {
+    this.allVisible = !this.allVisible;
   }
 }
