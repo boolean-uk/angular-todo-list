@@ -22,7 +22,8 @@ export class TodoListComponent {
     this.displayedTodos = this.todoList.filter((todo: Todo) => !todo.completed);
   }
 
-  refreshTodoList() {
+  async refreshTodoList() {
+    await this.getAllTodos();
     if (this.showCompleted) {
       this.displayedTodos = [...this.todoList];
     } else {
