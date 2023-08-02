@@ -1,0 +1,12 @@
+<form>
+  <input
+    type="text"
+    name="newTodo"
+    [(ngModel)]="newTodo"
+    maxlength="50"
+    required
+  />
+  <button (click)="createTodo()" [disabled]="newTodo.length == 0">
+    Create
+  </button>
+</form>

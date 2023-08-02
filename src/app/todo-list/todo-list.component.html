@@ -1,0 +1,19 @@
+<div class="container">
+  <app-create-todo (todoListChanged)="refreshTodoList()"></app-create-todo>
+
+  <app-todo-item
+    *ngFor="let todo of displayedTodos"
+    [todo]="todo"
+    (todoListChanged)="refreshTodoList()"
+  ></app-todo-item>
+
+  <form>
+    <label for="show-completed">Show completed todos</label>
+    <input
+      type="checkbox"
+      name="show-completed"
+      (click)="toggleShowCompleted()"
+      [checked]="showCompleted"
+    />
+  </form>
+</div>

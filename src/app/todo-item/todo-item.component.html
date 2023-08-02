@@ -1,0 +1,11 @@
+<li>
+  {{ todo.title }}
+  <input
+    type="checkbox"
+    (click)="toggleTodo()"
+    checked
+    *ngIf="todo.completed"
+  />
+  <input type="checkbox" (click)="toggleTodo()" *ngIf="!todo.completed" />
+  <button (click)="deleteTodo()">&#9003;</button>
+</li>
