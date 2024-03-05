@@ -23,6 +23,11 @@ implement the following requirements:
 - Refactor the `todo.service.ts` file to send a POST request to create a new todo
 - Refactor the `todo.service.ts` file send a PUT request to update an existing todo
 
+## Extensions
+- By default - only display non-completed todos
+- Have a button that allows the user to toggle between completed and non-completed todos
+
+
 ## Freedom
 
 if you want a bit more of a challenge, check out the freedom branch! It starts from a blank slate.
