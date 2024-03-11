@@ -1,52 +1,53 @@
-import { Injectable } from '@angular/core';
-import { Todo } from '../models/todo';
+import {Injectable} from '@angular/core';
+import {Todo} from '@app/todo/models/todo';
+import {BehaviorSubject, catchError, ignoreElements, Observable, of, Subject, switchMap, tap,} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {environment as env} from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private refresh$ = new BehaviorSubject<void>(undefined);
+  private update$ = new Subject<Todo>();
+  private updateErrs$: Observable<void | Error> = this.update$.pipe(
+    switchMap((todo) =>
+      this.http.put<Todo>(this.url(todo.id), todo).pipe(
+        ignoreElements(),
+        catchError((err) => of(err))
+      )
+    )
+  );
+  private todos$ = this.refresh$.pipe(
+    switchMap(() => this.http.get<Todo[]>(this.url()))
+  );
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  constructor(private readonly http: HttpClient) {
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  add(title: string): Observable<Todo> {
+    return this.http
+      .post<Todo>(this.url(), {title})
+      .pipe(tap(() => this.refresh$.next()));
+  }
 
-    return foundTodo;
+  getOne(id: number): Observable<Todo> {
+    return this.http.get<Todo>(this.url(id));
+  }
+
+  getAll(): Observable<Todo[]> {
+    return this.todos$;
+  }
+
+  update(id: number, updatedTodo: Todo) {
+    this.update$.next(updatedTodo);
+  }
+
+  delete(id: number): Observable<Todo> {
+    return this.http.delete<Todo>(this.url(id));
+  }
+
+  private url(id?: number): string {
+    return `${env.apiUrl}/${env.username}/todo${id ? `/${id}` : ''}`;
   }
 }
