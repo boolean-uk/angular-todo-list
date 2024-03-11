@@ -1,6 +1,13 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<label for="showComplete">Show Complete</label>
+<input
+  type="checkbox"
+  name="showComplete"
+  [checked]="showComplete"
+  (change)="showComplete = !showComplete"
+/>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of todos | todo : showComplete | async"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>

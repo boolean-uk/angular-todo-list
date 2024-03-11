@@ -1,52 +1,44 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private httpClient = inject(HttpClient);
+  private BASE_API_URL = 'https://boolean-api-server.fly.dev/Sabbasn/';
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Promise<Todo[]> = this.getTodos();
+
+  async getTodos(): Promise<Todo[]> {
+    const response = this.httpClient.get<Todo[]>(this.BASE_API_URL + 'todo');
+    const todos = await firstValueFrom(response);
+    return todos;
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
+    const respone = this.httpClient.post<Todo>(this.BASE_API_URL + 'todo', {
       title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
+    });
+    const todo = await firstValueFrom(respone);
+    (await this.todos).push(todo);
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    const response = this.httpClient.put<Todo>(
+      this.BASE_API_URL + `todo/${updatedTodo.id}`,
+      updatedTodo
+    );
+    const todo = await firstValueFrom(response);
+    const existingTodo = (await this.todos).find(
+      (x: Todo) => x.id === updatedTodo.id
+    );
+    if (!existingTodo) throw new Error('No todo with id: ' + updatedTodo.id);
+    existingTodo.completed = todo.completed;
+    existingTodo.title = todo.title;
+    return todo;
   }
 }
