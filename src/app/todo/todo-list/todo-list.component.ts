@@ -8,8 +8,11 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    private readonly todoService: TodoService,
+  ) {}
 
+  showComplete: boolean = false;
   todos = this.todoService.todos;
 
   updateTodo(todo: Todo) {
@@ -19,5 +22,8 @@ export class TodoListComponent {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+  toggleCompleted(): void {
+    this.todoService.toggleShowCompleted();
   }
 }
