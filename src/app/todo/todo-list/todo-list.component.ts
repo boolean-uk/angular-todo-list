@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -8,8 +8,9 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  private todoService = inject(TodoService);
 
+  showComplete: boolean = false;
   todos = this.todoService.todos;
 
   updateTodo(todo: Todo) {
