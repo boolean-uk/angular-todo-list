@@ -1,6 +1,10 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
 <app-todo-item
-  *ngFor="let todo of todos"
+  *ngFor="let todo of filteredTodos"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
+
+<button (click)="toggleView()">{{ showAll ? "Show only completed": "Show all" }}</button>
+
+
