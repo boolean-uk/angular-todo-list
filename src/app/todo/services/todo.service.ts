@@ -24,12 +24,11 @@ export class TodoService {
     return todo;
   }
 
-  async updateTodo(updatedTodo: Todo) {
-    await firstValueFrom(
-      this.http.put(`${this.BASE_URL}/${updatedTodo.id}`, {
-        title: updatedTodo.title,
-        completed: updatedTodo.completed,
-      })
+  async updateTodo(updatedTodo: Todo): Promise<Todo> {
+    const todo = await firstValueFrom(
+      this.http.put<Todo>(`${this.BASE_URL}/${updatedTodo.id}`, updatedTodo)
     );
+    (await this.todos).map((t) => (t.id === updatedTodo.id ? updatedTodo : t));
+    return todo;
   }
 }

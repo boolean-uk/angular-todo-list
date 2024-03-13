@@ -8,16 +8,33 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  hideCompleted: boolean = true;
+  todos: Promise<Todo[]> = this.todoService.todos;
+  showTodos: Todo[] = [];
 
-  todos = this.todoService.todos;
-
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  constructor(private readonly todoService: TodoService) {
+    this.filterCompletedTodos();
   }
 
-  async newTodo(title: string) {
+  async filterCompletedTodos(): Promise<void> {
+    const todos = await this.todos;
+    this.hideCompleted
+      ? (this.showTodos = todos.filter((t) => t.completed === false))
+      : (this.showTodos = todos);
+  }
+
+  async toggleHideCompleted(): Promise<void> {
+    this.hideCompleted = !this.hideCompleted;
+    await this.filterCompletedTodos();
+  }
+
+  async updateTodo(todo: Todo): Promise<void> {
+    await this.todoService.updateTodo(todo);
+    await this.filterCompletedTodos();
+  }
+
+  async newTodo(title: string): Promise<void> {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    await this.filterCompletedTodos();
   }
 }
