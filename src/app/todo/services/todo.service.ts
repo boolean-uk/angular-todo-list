@@ -9,52 +9,38 @@ import { ApplicationRef } from '@angular/core';
 })
 export class TodoService {
   private URL = "https://boolean-api-server.fly.dev/thegrevling/todo"
-  private httpClient = inject(HttpClient);
-  showCompleted = true; // Default to not show completed todos
-  todos: Promise<Todo[]>;
+  showCompleted = false; // Default to not show completed todos
+  todos: any;
+  http = inject(HttpClient)
 
   constructor(private appRef: ApplicationRef) { this.todos = this.getTodos()}
 
-  getTodos = async(): Promise<Todo[]> =>{
-    const response = this.httpClient.get<Todo[]>(this.URL);
-    const todos = await firstValueFrom(response);
-    // Filter todos based on showCompleted property
-    const filteredTodos = this.showCompleted ? todos : todos.filter(todo => !todo.completed);
-    return filteredTodos;
+  async getTodos() {
+    const result = await firstValueFrom(this.http.get(`${this.URL}`));
+    // @ts-ignore
+    this.todos = result;
+    return this.todos;
   }
 
-  async addTodo(title: string): Promise<Todo> {
-    const response = this.httpClient.post<Todo>(this.URL, { title: title });
-    const todo = await firstValueFrom(response);
-    (await this.todos).push(todo);
-    this.refreshTodos();
-    return todo;
+  async addTodo(title: string) {
+    const request = this.http.post<Todo>(this.URL, { title: title });
+    const response = await firstValueFrom(request);
+    this.todos.push(response)
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    const response = this.httpClient.put<Todo>(`${this.URL}/${updatedTodo.id}`, updatedTodo);
-    const todo = await firstValueFrom(response);
 
-    // Update the local todos
-    const existingTodoIndex = (await this.todos).findIndex(t => t.id === updatedTodo.id);
-    if (existingTodoIndex !== -1) {
-      (await this.todos)[existingTodoIndex] = todo;
+    const request = this.http.put<Todo>(this.URL+"/"+updatedTodo.id, { title: updatedTodo.title, completed: updatedTodo.completed });
+    const foundTodo = firstValueFrom(request)
+    if (!foundTodo) {
+      throw new Error('todo not found');
     }
+    Object.assign(foundTodo, updatedTodo);
 
-    // Update the todos property
-    this.refreshTodos();
-
-    return todo;
+    return foundTodo;
   }
+
   toggleShowCompleted(): void {
     this.showCompleted = !this.showCompleted;
-    this.refreshTodos();
-  }
-  // Helper method to update the 'todos' property
-  private async refreshTodos(): Promise<void> {
-    console.log("refreshing")
-    this.todos = this.getTodos();
-    console.log(this.todos)
-    this.appRef.tick();
   }
 }
