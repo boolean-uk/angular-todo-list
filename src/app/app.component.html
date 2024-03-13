@@ -1,3 +1,5 @@
+<span><p (click)="UpdateToggle()" style="margin-right: 10px;">Toggle view</p></span>
+<br>
 <div class="todo-container">
-  <app-todo-list></app-todo-list>
+  <app-todo-list (toggle)="toggleFinished"></app-todo-list>
 </div>
