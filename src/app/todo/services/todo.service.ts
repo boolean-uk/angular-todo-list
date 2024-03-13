@@ -1,10 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  url = `https://boolean-api-server.fly.dev/Vayeros/todo`
+  http = inject(HttpClient)
   private todoId = 1;
   private todoList: Todo[] = [
     {
@@ -25,7 +29,13 @@ export class TodoService {
   ];
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Promise<Todo[]> = Promise.resolve(this.getTodos());
+  
+
+  async getTodos(): Promise<Todo[]> {
+    const result = await firstValueFrom(this.http.get<Todo[]>(`${this.url}`))
+    return result    
+  }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,8 +44,8 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
-
+    const res = await firstValueFrom(this.http.post<Todo>(`${this.url}`, todo))
+    this.todos = this.getTodos()
     return todo;
   }
 
@@ -45,8 +55,7 @@ export class TodoService {
     if (!foundTodo) {
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    const result = await firstValueFrom(this.http.put<Todo>(`${this.url}/${updatedTodo.id}`, updatedTodo))
+    return result;
   }
 }
