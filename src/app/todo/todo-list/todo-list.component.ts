@@ -10,7 +10,7 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(
     private readonly todoService: TodoService,
-  ) {}
+  ) { }
 
   showComplete: boolean = false;
   todos = this.todoService.todos;
@@ -23,6 +23,6 @@ export class TodoListComponent {
     await this.todoService.addTodo(title);
   }
   toggleCompleted(): void {
-    this.todoService.toggleShowCompleted();
+    this.showComplete = !this.showComplete;
   }
 }

@@ -9,11 +9,10 @@ import { ApplicationRef } from '@angular/core';
 })
 export class TodoService {
   private URL = "https://boolean-api-server.fly.dev/thegrevling/todo"
-  showCompleted = false; // Default to not show completed todos
   todos: any;
   http = inject(HttpClient)
 
-  constructor(private appRef: ApplicationRef) { this.todos = this.getTodos()}
+  constructor(private appRef: ApplicationRef) { this.todos = this.getTodos() }
 
   async getTodos() {
     const result = await firstValueFrom(this.http.get(`${this.URL}`));
@@ -29,8 +28,7 @@ export class TodoService {
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-
-    const request = this.http.put<Todo>(this.URL+"/"+updatedTodo.id, { title: updatedTodo.title, completed: updatedTodo.completed });
+    const request = this.http.put<Todo>(this.URL + "/" + updatedTodo.id, { title: updatedTodo.title, completed: updatedTodo.completed });
     const foundTodo = firstValueFrom(request)
     if (!foundTodo) {
       throw new Error('todo not found');
@@ -38,9 +36,5 @@ export class TodoService {
     Object.assign(foundTodo, updatedTodo);
 
     return foundTodo;
-  }
-
-  toggleShowCompleted(): void {
-    this.showCompleted = !this.showCompleted;
   }
 }
