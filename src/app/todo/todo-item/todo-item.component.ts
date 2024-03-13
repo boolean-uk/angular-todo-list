@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { TodoService } from '../services/todo.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todo-item',
@@ -9,14 +11,12 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  todoService = inject(TodoService)
 
   toggleCompleted() {
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
     }
-    this.update.emit({
-      ...this.todo,
-      completed: !this.todo.completed,
-    });
+    this.todoService.updateTodo(this.todo)
   }
 }

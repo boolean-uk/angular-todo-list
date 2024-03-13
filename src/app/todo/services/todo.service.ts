@@ -43,6 +43,19 @@ export class TodoService {
     return todo;
   }
 
+  async updateTodo(updatedTodo: Todo): Promise<Todo> {
+    const foundTodo = await firstValueFrom(this.http.get(`${environment.apiUrl}/nora-hansen/todo/${updatedTodo.id}`));
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+    const updateTodo = await firstValueFrom(this.http.put(`${environment.apiUrl}/nora-hansen/todo/${updatedTodo.id}`, {
+      title: updatedTodo.title,
+      completed: updatedTodo.completed
+    }))
+    console.log("updated", updatedTodo)
+    return updatedTodo;
+  }
+
   // async updateTodo(updatedTodo: Todo): Promise<Todo> {
   //   // TODO: replace with a PUT request
   //   const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
