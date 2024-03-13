@@ -19,6 +19,9 @@ export class TodoService {
     );
   }
   async addTodo(title: string): Promise<Todo> {
+    if (!title || title === null || title === undefined) {
+      throw new Error('Invalid todo-task');
+    }
     const newTask = { title };
     const todo = await firstValueFrom(
       this.http.post<Todo>(
@@ -27,7 +30,6 @@ export class TodoService {
       )
     );
     this.todoList.push(todo);
-
     return todo;
   }
 
