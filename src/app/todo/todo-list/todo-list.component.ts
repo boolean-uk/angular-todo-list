@@ -11,10 +11,10 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos: Todo[] = [];
+  showOnlyCompleted: boolean = false;
 
   async ngOnInit() {
     this.todos = await this.todoService.todos;
-    console.log(this.todos)
   }
 
   updateTodo(todo: Todo) {
@@ -26,5 +26,12 @@ export class TodoListComponent {
     this.todos = await this.todoService.todos;
   }
 
+  toggleShowOnlyCompleted() {
+    this.showOnlyCompleted = !this.showOnlyCompleted
+  }
+
+  filteredTodos() {
+    return this.todos.filter((t) => t.completed === this.showOnlyCompleted)
+  }
   
 }

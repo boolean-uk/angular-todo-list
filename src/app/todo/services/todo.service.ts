@@ -18,7 +18,6 @@ export class TodoService {
   async addTodo(title: string): Promise<Todo> {
     
     const todo = await firstValueFrom(this.http.post<Todo>(`${environment.apiUrl}`, { title: title, completed: false}, {headers: {'Content-Type': 'application/json' }}));
-    console.log(todo);
 
     // @ts-ignore
     return todo;

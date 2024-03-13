@@ -6,3 +6,13 @@
   gap: 0.5em;
   padding-top: 0.5em;
 }
+
+label {
+  margin-top: 5px;
+  margin-bottom:10px;
+  text-align: center;
+}
+
+input {
+  margin-left: 15px;
+}
