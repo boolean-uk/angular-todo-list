@@ -19,22 +19,6 @@ export class TodoService {
     )
   }
       
-      // {
-        //   id: this.todoId++,
-        //   title: 'serve the app',
-  //   completed: true,
-  // },
-  // {
-    //   id: this.todoId++,
-    //   title: 'familiarise yourself with the codebase',
-    //   completed: false,
-    // },
-    // {
-      //   id: this.todoId++,
-      //   title: 'start talking to the api',
-      //   completed: false,
-      // },
-      
   get todos(): Promise<Todo[]> {
     return firstValueFrom(
       this.http.get<Todo[]>('https://boolean-api-server.fly.dev/klaand01/todo')
@@ -66,7 +50,6 @@ export class TodoService {
       this.http.put<Todo>(`https://boolean-api-server.fly.dev/klaand01/todo/${updatedTodo.id}`, updatedTodo)
     );
 
-    console.log("UPDATED TODO", mewTodo);
     Object.assign(todo, updatedTodo);
     return mewTodo;
   }
