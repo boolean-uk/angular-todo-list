@@ -1,52 +1,56 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
+import { environment } from '../../../environments/environment';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private baseUrl = `${environment.apiUrl}/krzysztofmmm/todo`;
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private http: HttpClient) {}
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  getTodos(showCompleted: boolean): Promise<Todo[]> {
+    return this.http
+      .get<Todo[]>(this.baseUrl)
+      .pipe(
+        catchError((error) => {
+          console.error('Get todos failed', error);
+          return of([]); // Always return an array
+        })
+      )
+      .toPromise()
+      .then(
+        (todos) =>
+          todos?.filter((todo) => showCompleted === todo.completed) || []
+      );
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  addTodo(title: string): Promise<Todo> {
+    return this.http
+      .post<Todo>(this.baseUrl, { title })
+      .toPromise()
+      .then((response) => {
+        if (!response) {
+          throw new Error('Todo creation failed'); // Handle no response
+        }
+        return response;
+      });
+  }
 
-    return foundTodo;
+  updateTodo(updatedTodo: Todo): Promise<Todo> {
+    const url = `${this.baseUrl}/${updatedTodo.id}`;
+    return this.http
+      .put<Todo>(url, updatedTodo)
+      .toPromise()
+      .then((response) => {
+        if (!response) {
+          throw new Error('Todo update failed'); // Handle no response
+        }
+        return response;
+      });
   }
 }
