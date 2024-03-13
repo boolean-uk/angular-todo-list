@@ -10,14 +10,36 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todos: Todo[] = [];
+  showCompleted: boolean = false;
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  todosToShow: Todo[] = [];
+
+  loadTodos() {
+    this.todosToShow = this.todos.filter((todo: Todo) => todo.completed === this.showCompleted);
+  }
+
+  swapShowComplete() {
+    this.showCompleted = !this.showCompleted;
+    this.loadTodos();
+  }
+
+  async ngOnInit() {
+    // @ts-ignore
+    const todoFromApi = await this.todoService.getTodos();
+    this.todos = todoFromApi;
+    this.loadTodos()
+  }
+
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.todos = this.todoService.todos;
+    this.loadTodos()
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+    this.loadTodos()
   }
 }
