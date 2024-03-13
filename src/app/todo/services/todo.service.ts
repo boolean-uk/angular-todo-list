@@ -1,52 +1,46 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  http = inject(HttpClient);
+  urlPath = "/KonWritesCode/todo"
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+
+  private todoId = 1;
+  private todoList: Todo[] = []
+
+  get todos(): Promise<Todo[]> {
+    console.log("get request");
+    // @ts-ignore
+    return firstValueFrom(this.http.get(`${environment.apiUrl}` + this.urlPath));
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
+    console.log("addToDo")
+    const todo = await firstValueFrom(this.http.post(`${environment.apiUrl}` + this.urlPath, 
+    {
+      //id: this.todoId++,
       title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
+      completed: false
+    }));
+    // @ts-ignore
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    const todo = await firstValueFrom(this.http.put(`${environment.apiUrl}` + this.urlPath + `/${updatedTodo.id}`, 
+    {
+      //id: this.todoId++,
+      title: updatedTodo.title, 
+      completed: updatedTodo.completed
+    }));
+    // @ts-ignore
+    return todo;
   }
 }
