@@ -2,13 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
   private http = inject(HttpClient);
 
   // TODO replace with a get request

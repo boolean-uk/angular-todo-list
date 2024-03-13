@@ -21,8 +21,9 @@ export class TodoListComponent {
     this.todos = this.getTodos()
   }
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.todos = this.getTodos()
   }
 
   async newTodo(title: string) {
