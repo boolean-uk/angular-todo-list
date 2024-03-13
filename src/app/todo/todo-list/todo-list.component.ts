@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -8,9 +8,14 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  todoService = inject(TodoService)
+  todos: any;
+  showCompleted = false
 
-  todos = this.todoService.todos;
+  async ngOnInit() {
+    this.todos = await this.todoService.todos;
+    console.log("tidi", this.todos)
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
