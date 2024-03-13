@@ -1,8 +1,9 @@
-<ng-template [ngIf]="todo">
-  <span>{{ todo.title }}</span>
-  <input
-    type="checkbox"
-    (click)="toggleCompleted()"
-    [(ngModel)]="todo.completed"
-  />
-</ng-template>
+<ng-container *ngIf="todo">
+  <span *ngIf="!isEditing">{{ todo.title }}</span>
+  <ng-container *ngIf="isEditing">
+    <input type="text" [(ngModel)]="updatedTitle" (blur)="onTitleBlur()" (keyup.enter)="onTitleBlur()" />
+  </ng-container>
+  <button (click)="onEditClick()">{{ isEditing ? 'Save' : 'Edit' }}</button>
+  <button (click)="onDeleteClick()">Delete</button>
+  <input type="checkbox" (click)="toggleCompleted()" [(ngModel)]="todo.completed" />
+</ng-container>
