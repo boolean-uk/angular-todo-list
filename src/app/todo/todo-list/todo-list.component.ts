@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -9,6 +9,7 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  @Output('whatIsThis') toggleShow = new EventEmitter<boolean>();
 
   todos = this.todoService.todos;
 
@@ -19,5 +20,15 @@ export class TodoListComponent {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+
+  // filter list
+  filter = false;
+  filterTodos() {
+    if (this.filter) {
+      this.filter = false;
+    } else {
+      this.filter = true;
+    }
   }
 }
