@@ -8,7 +8,9 @@ import { Todo } from '../models/todo';
 })
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
+  @Input('filter') filter: boolean = true;
   @Output('update') update = new EventEmitter<Todo>();
+
 
   toggleCompleted() {
     if (!this.todo) {
