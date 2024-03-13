@@ -1,31 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { environment } from 'src/environments/environment';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  http = inject(HttpClient);
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  private todoList: Todo[] = [];
+
+  todos: Promise<Todo[]> = this.getTodos();
+
+  async getTodos() {
+    const result = await firstValueFrom(
+      this.http.get(`${environment.apiUrl}/StevenTPh/todo`)
+    );
+    //@ts-ignore
+    this.todoList = result;
+
+    return this.todoList;
+  }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,19 +32,24 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+    await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/StevenTPh/todo`, todo)
+    );
+    this.todos = this.getTodos();
 
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+    const result = await firstValueFrom(
+      this.http.put(`${environment.apiUrl}/StevenTPh/todo/${updatedTodo.id}`, {
+        title: updatedTodo.title,
+        completed: updatedTodo.completed,
+      })
+    );
 
-    return foundTodo;
+    console.log(result);
+
+    return updatedTodo;
   }
 }
