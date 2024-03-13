@@ -12,6 +12,12 @@ export class TodoListComponent {
 
   todos = this.todoService.todos;
 
+  showCompleted: boolean = false;
+
+  toggleShowCompleted = async () => {
+    this.showCompleted = !this.showCompleted;
+  };
+
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }

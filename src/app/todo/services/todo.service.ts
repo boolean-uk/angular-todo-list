@@ -8,24 +8,6 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
   http = inject(HttpClient);
 
   get todos(): Promise<Todo[]> {
@@ -43,7 +25,6 @@ export class TodoService {
     const newTodo: Todo = await firstValueFrom(
       this.http.post(`${environment.apiUrl}/todo`, todo)
     );
-    this.todoList.push(newTodo);
     return newTodo;
   }
 
@@ -57,13 +38,8 @@ export class TodoService {
       this.http.put(`${environment.apiUrl}/todo/` + todoToUpdate.id, newTodo)
     );
     if (!updatedTodo) {
-      throw new Error('todo not found');
+      throw new Error('todo not found1');
     }
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-    return foundTodo;
+    return updatedTodo;
   }
 }

@@ -1,4 +1,8 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleShowCompleted()">
+  <p *ngIf="showCompleted">Hide Completed</p>
+  <p *ngIf="!showCompleted">Show Completed</p>
+</button>
 <app-todo-item
   *ngFor="let todo of todos | async"
   [todo]="todo"
