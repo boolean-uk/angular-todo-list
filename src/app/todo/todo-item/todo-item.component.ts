@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Todo } from '../models/todo';
+import { TodoListComponent } from '../todo-list/todo-list.component';
 
 @Component({
   selector: 'app-todo-item',
@@ -9,6 +10,10 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+
+  constructor(private readonly todoListComponent: TodoListComponent) {}
+  
+  showAll = this.todoListComponent.showAll;
 
   toggleCompleted() {
     if (!this.todo) {

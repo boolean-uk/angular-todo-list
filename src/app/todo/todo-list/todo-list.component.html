@@ -1,6 +1,9 @@
+<button (click)="showAll = !showAll">{{!showAll ? "show all" : "show less"}}</button>
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<div *ngFor="let todo of (showAll ? todos : filteredTodos )">
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngIf="todo"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
+</div>
