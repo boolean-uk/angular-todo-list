@@ -1,52 +1,40 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
+import { HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+export class TodoService {
+  private apiUrl = 'https://boolean-api-server.fly.dev/sandersaether/todo'; 
+  showCompletedTodos = false;
+  todos: Promise<Todo[]> = this.getTodos();
+  
+
+  constructor(private http: HttpClient) {}
+
+  async getTodos(): Promise<Todo[]> {
+    return await firstValueFrom(this.http.get<Todo[]>(this.apiUrl));
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
+    const todo = await firstValueFrom(
+      this.http.post<Todo>(this.apiUrl, { title })
+    );
+    (await this.todos).push(todo);
     return todo;
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  async updateTodo(todo: Todo): Promise<Todo> {
+    return await firstValueFrom(
+      this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo)
+    );
+  }
 
-    return foundTodo;
+  toggleCompletedTodos(): void {
+    this.showCompletedTodos = !this.showCompletedTodos;
   }
 }
