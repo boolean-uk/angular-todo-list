@@ -9,8 +9,12 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  hide: boolean = false;
+  todos = this.todoService.getTodo();
 
-  todos = this.todoService.todos;
+  hideShow(){
+    this.hide = !this.hide
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +22,6 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = this.todoService.getTodo();
   }
 }
