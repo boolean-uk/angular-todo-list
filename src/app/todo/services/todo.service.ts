@@ -1,51 +1,50 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { NetworkService } from 'src/app/network.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private todoList: Todo[] = [];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private network: NetworkService) {
+    network.baseURL = "https://boolean-api-server.fly.dev/migzus/"
+
+    this.network.GET<Todo[]>("todo", (res) => {
+      this.todoList = res
+    })
+  }
+
+  get todos() : Promise<Todo[]> {
+    return firstValueFrom(this.network.GET_SUBSCRIPTION("todo"))
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
     const todo = {
       id: this.todoId++,
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+    
+    console.log(todo)
+    this.network.POST("todo", todo, () => {
+      this.todoList.push(todo);
+    })
 
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+    const foundTodo = this.todoList.find((todo) => { return todo.id === updatedTodo.id });
     if (!foundTodo) {
       throw new Error('todo not found');
     }
     Object.assign(foundTodo, updatedTodo);
+
+    this.network.PUT("todo/" + updatedTodo.id, updatedTodo)
 
     return foundTodo;
   }
