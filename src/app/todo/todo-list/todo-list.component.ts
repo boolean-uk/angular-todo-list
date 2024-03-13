@@ -9,8 +9,12 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-
+  hide: boolean = false;
   todos = this.todoService.getTodo();
+
+  hideShow(){
+    this.hide = !this.hide
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
