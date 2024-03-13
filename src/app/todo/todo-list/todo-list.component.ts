@@ -9,7 +9,6 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-  @Output('whatIsThis') toggleShow = new EventEmitter<boolean>();
 
   todos = this.todoService.todos;
 
