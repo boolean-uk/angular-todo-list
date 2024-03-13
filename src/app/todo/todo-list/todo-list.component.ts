@@ -13,9 +13,9 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {
     }
 
-  todos =  this.todoService.todos;
+  todos:Promise<Todo[]> = this.todoService.todos;
 
-  updateTodo(todo: Todo) {
+    updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 

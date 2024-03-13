@@ -1,5 +1,5 @@
-<span><p (click)="UpdateToggle()" style="margin-right: 10px;">Toggle view</p></span>
+<span><label for="toggleView">Show completed</label><input type="checkbox" style="margin-right: 10px;"(change)="UpdateToggle()"></span>
 <br>
 <div class="todo-container">
-  <app-todo-list (toggle)="toggleFinished"></app-todo-list>
+  <app-todo-list></app-todo-list>
 </div>
