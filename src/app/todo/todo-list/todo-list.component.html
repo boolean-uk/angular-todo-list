@@ -6,5 +6,7 @@
   </label>
 </div>
 <ng-container *ngFor="let todo of todos | async">
-  <app-todo-item [todo]="todo" *ngIf="showCompleted || !todo.completed" (update)="updateTodo($event)"></app-todo-item>
+  <app-todo-item *ngIf="(showCompleted && !todo.completed) || (!showCompleted && todo.completed)" [todo]="todo"
+    (update)="updateTodo($event)">
+  </app-todo-item>
 </ng-container>

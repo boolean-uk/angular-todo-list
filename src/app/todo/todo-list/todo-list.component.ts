@@ -11,7 +11,7 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) { }
 
   todos = this.todoService.todos;
-  showCompleted = true;
+  showCompleted = false;
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
