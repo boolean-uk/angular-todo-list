@@ -11,7 +11,7 @@ export class TodoService {
 
   constructor(private http: HttpClient) {}
 
-  todos(): Promise<Todo[]> {
+  getTodos(): Promise<Todo[]> {
     try {
       return firstValueFrom(this.http.get<Todo[]>(this.apiUrl));
     } catch (error) {
