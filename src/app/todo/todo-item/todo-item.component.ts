@@ -19,4 +19,10 @@ export class TodoItemComponent {
       completed: !this.todo.completed,
     });
   }
+
+  handleEditClick() {
+    if (this.todo) {
+      this.update.emit(this.todo)
+    }
+  }
 }
