@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Output, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -10,6 +10,7 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   todoService = inject(TodoService)
   todos: any;
+  showUncompleted = true
 
   async ngOnInit() {
     this.todos = await this.todoService.todos;

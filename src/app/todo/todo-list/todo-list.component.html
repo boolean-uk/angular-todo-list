@@ -1,6 +1,9 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="showUncompleted=!showUncompleted">Show {{showUncompleted ? "uncomplete" : "complete"}}</button>
+<ng-container *ngFor="let todo of todos">
 <app-todo-item
-  *ngFor="let todo of todos"
+  *ngIf="todo.completed === showUncompleted"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
+</ng-container>

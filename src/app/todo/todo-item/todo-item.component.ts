@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
+  @Input('showUncompleted') showUncompleted: boolean = true
   @Output('update') update = new EventEmitter<Todo>();
   todoService = inject(TodoService)
 
