@@ -10,25 +10,39 @@ import { Todo } from '../models/todo';
 export class TodoListComponent implements OnInit {
   todos: any;
 
+  showCompleted = false; // New property to track the visibility of completed todos
+
   constructor(private readonly todoService: TodoService) {}
 
   ngOnInit() {
-    this.todos = this.todoService.todos
-    console.log(this.todos)
+    this.todos = this.todoService.todos.then((res) => res.filter(todo => todo.completed === false))
   }
-
 
  async newTodo(title: string) {
-  const res = await this.todoService.addTodo(title);
-  console.log(res)
-  this.todos = this.todoService.todos;
+  await this.todoService.addTodo(title);
+  this.filterList()
 }
 
-
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.filterList()
   }
 
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted; // Toggle the visibility of completed todos
+    console.log(this.showCompleted)
+    this.filterList()
+ }
 
-  
+ filterList(){
+  if (!this.showCompleted){
+    this.todos = this.todoService.todos.then((res) => res.filter(todo => todo.completed === false))
+    
+  } else {
+    this.todos = this.todoService.todos.then((res) => res.filter(todo => todo.completed === true))
+  }
+ }
+
 }
+
+

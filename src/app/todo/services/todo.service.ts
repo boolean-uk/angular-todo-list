@@ -43,8 +43,10 @@ export class TodoService {
 
 
   async addTodo(title: string): Promise<Todo> {
-    const newTodo = await firstValueFrom(this.http.post<Todo>(this.apiUrl + "/santhia97/todo", { title }));
-    return newTodo;
+    const newTodo = await firstValueFrom(this.http.post(`${this.apiUrl}/santhia97/todo`, { title }));
+    console.log(newTodo)
+    // @ts-ignore
+    return newTodo
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
