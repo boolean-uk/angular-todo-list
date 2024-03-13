@@ -41,6 +41,7 @@ export class TodoService {
   async getTodos(): Promise<Todo[]> {
     const response = this.httpClient.get<Todo[]>(this.APIURL + 'todo');
     const todos = await firstValueFrom(response);
+    console.log(todos)
     return todos;
   }
 
