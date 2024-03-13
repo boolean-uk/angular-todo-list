@@ -9,8 +9,17 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  showCompleted = false;
+  todos = this.getTodos();
 
-  todos = this.todoService.todos;
+  getTodos() {
+    return this.todoService.todos.then(res => res.filter(todo => todo.completed === this.showCompleted))
+  }
+
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted
+    this.todos = this.getTodos()
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +27,6 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = this.getTodos();
   }
 }

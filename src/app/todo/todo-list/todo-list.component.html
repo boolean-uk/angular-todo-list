@@ -1,4 +1,5 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleCompleted()">Filter Completed</button>
 <app-todo-item
   *ngFor="let todo of todos | async"
   [todo]="todo"
