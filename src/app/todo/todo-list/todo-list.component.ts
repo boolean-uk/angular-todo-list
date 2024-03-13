@@ -10,17 +10,17 @@ import { Observable } from 'rxjs';
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
-  constructor(private readonly todoService: TodoService) {}
+  showCompleaded: Boolean = false;
 
-  // todos = this.todoService.todos;
+  constructor(private readonly todoService: TodoService) {}
 
   ngOnInit(): void {
     this.loadTodos();
   }
 
   async loadTodos() {
-    //@ts-ignore
-    this.todos = await this.todoService.loadTodos();
+    const response = await this.todoService.loadTodos();
+    this.todos = this.filterTodos(response);
   }
   updateTodo(todo: Todo) {
     console.log(todo);
@@ -30,5 +30,19 @@ export class TodoListComponent implements OnInit {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.loadTodos();
+  }
+
+  toggleCompleated() {
+    this.showCompleaded = !this.showCompleaded;
+    this.loadTodos();
+  }
+
+  // helper
+  private filterTodos(todos: Todo[]): Todo[] {
+    if (this.showCompleaded) {
+      return todos.filter((todo) => todo.completed);
+    } else {
+      return todos.filter((todo) => !todo.completed);
+    }
   }
 }
