@@ -1,10 +1,16 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<button (click)="toggleCompleted()">Toggle completed</button>
+<div>
+  Completed
+  <input type="checkbox" (click)="filterTodos()" [(ngModel)]="completed" />
 
-<ng-container *ngIf="showTodos">
-  <app-todo-item
-    *ngFor="let todo of todos | async"
-    [todo]="todo"
-    (update)="updateTodo($event)"
-  ></app-todo-item>
-</ng-container>
+  Uncompleted
+  <input type="checkbox" (click)="filterTodos()" [(ngModel)]="uncompleted" />
+</div>
+
+
+<app-todo-item
+  *ngFor="let todo of filteredTodos"
+  [todo]="todo"
+  (update)="updateTodo($event)"
+></app-todo-item>
+

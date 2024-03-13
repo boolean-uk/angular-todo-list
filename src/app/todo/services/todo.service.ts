@@ -11,16 +11,16 @@ import { firstValueFrom } from 'rxjs';
 export class TodoService {
   constructor(private http: HttpClient) {}
 
-  // TODO replace with a get request
+
   get todos(): Promise<Todo[]> {
     // @ts-ignore
-    return firstValueFrom(this.http.get<Todo[]>(`${environment.apiUrl}/todo`));
+    return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`));
   }
   
-  async getTodos() : Promise<Todo[]> {
-    // @ts-ignore
-    return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`))
-  }
+  // async getTodos() : Promise<Todo[]> {
+  //   // @ts-ignore
+  //   return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`))
+  // }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -33,8 +33,9 @@ export class TodoService {
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     const updatedTodoResponse = await firstValueFrom(
-      this.http.put<Todo>(`${environment.apiUrl}/todo/${updatedTodo.id}`, updatedTodo)
+      this.http.put(`${environment.apiUrl}/todo/${updatedTodo.id}`, updatedTodo)
     );
+    // @ts-ignore
     return updatedTodoResponse;
   }
 }
