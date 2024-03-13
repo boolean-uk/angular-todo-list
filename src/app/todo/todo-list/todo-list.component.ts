@@ -8,9 +8,16 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
+  // The line below is basically the same as: 
+  // private todoService = inject(TodoService);
   constructor(private readonly todoService: TodoService) {}
+  showComplete: boolean = false;
+  todos: any;
 
-  todos = this.todoService.todos;
+  // if (showComplete) {
+  //   this.todos = this.todoService.todos();
+  // }
+
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +25,13 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = this.todoService.todos();
   }
+
+  // Function to handle the toggle:
+  toggleDisplay() {
+    console.log("HAHAHHA");
+    this.showComplete = !this.showComplete;
+  }
+
 }

@@ -1,5 +1,6 @@
 <ng-template [ngIf]="todo">
   <span>{{ todo.title }}</span>
+  <!-- Toggle on click! -->
   <input
     type="checkbox"
     (click)="toggleCompleted()"
