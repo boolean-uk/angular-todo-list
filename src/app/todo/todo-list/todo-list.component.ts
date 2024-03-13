@@ -9,11 +9,31 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  todos : any;
+  showAll: boolean = false
 
-  todos = this.todoService.todos;
+  ngOnInit() {
+    this.todos = this.todoService.todos
+    this.filterinComplete()
+  }
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  filterinComplete(){
+    this.todos = this.todoService.todos.then((res) => res.filter(t => t.completed === false))
+  }
+
+  toggleShowAll(){
+    if (!this.showAll){
+      this.showAll = true
+      this.todos = this.todoService.todos
+    } else {
+      this.showAll = false
+      this.filterinComplete()
+    }
+  }
+
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.filterinComplete()
   }
 
   async newTodo(title: string) {

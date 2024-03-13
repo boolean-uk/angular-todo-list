@@ -1,4 +1,5 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleShowAll()">Change view</button>
 <app-todo-item
   *ngFor="let todo of todos | async"
   [todo]="todo"

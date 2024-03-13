@@ -1,52 +1,36 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  http = inject(HttpClient)
+  todoList: any;
+
+  get todos(): Promise<Todo[]> {
+  const res =  firstValueFrom(this.http.get(`${environment.apiUrl}/uerbzr/todo`));
+  // @ts-ignore
+  return res
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+    const todo = await firstValueFrom(this.http.post(`${environment.apiUrl}/uerbzr/todo`, 
+      {title: title}))
+    return todo as Todo;
   }
+
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
+    console.log(updatedTodo)
+    const foundTodo = await firstValueFrom(this.http.put(`${environment.apiUrl}/uerbzr/todo/${updatedTodo.id}`, { title: updatedTodo.title, completed: updatedTodo.completed }))
+    if (!updatedTodo){
+      throw new Error('todo not found')
     }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
-  }
+    return foundTodo as Todo
+}
 }
