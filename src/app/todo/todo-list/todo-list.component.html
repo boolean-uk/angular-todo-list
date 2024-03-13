@@ -7,6 +7,7 @@
       *ngIf="todo.completed"
     ></app-todo-item>
   </div>
+  <button (click)="renderDoneOrNot()">show not completed</button>
 </div>
 <div *ngIf="!todoDone">
   <div *ngFor="let todo of todoService.todos">
@@ -16,5 +17,5 @@
       *ngIf="!todo.completed"
     ></app-todo-item>
   </div>
+  <button (click)="renderDoneOrNot()">show completed</button>
 </div>
-<button (click)="renderDoneOrNot()">see completed</button>
