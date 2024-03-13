@@ -11,6 +11,11 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos: any
+  showCompleted : boolean = false
+
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -21,8 +26,7 @@ export class TodoListComponent {
     this.todos = this.todoService.getTodos();
   }
 
-  async ngOnInit() {
-    const todos = await this.todoService.getTodos();
-    this.todos = Promise.resolve(todos);
+  ngOnInit() {
+    this.todos = this.todoService.getTodos();
   }
 }
