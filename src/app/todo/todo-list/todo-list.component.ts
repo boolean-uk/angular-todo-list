@@ -9,8 +9,11 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  todos:any
 
-  todos = this.todoService.todos;
+  async ngOnInit() {
+    this.todos = await this.todoService.getTodos();
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +21,6 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+/*     this.todos = this.todoService.todos; */
   }
 }
