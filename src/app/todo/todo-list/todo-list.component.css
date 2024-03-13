@@ -6,3 +6,18 @@
   gap: 0.5em;
   padding-top: 0.5em;
 }
+
+.show-completed {
+  display: flex;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 0.3em;
+}
+
+span {
+  flex: 1;
+}
+
+input:hover {
+  cursor: pointer;
+}
