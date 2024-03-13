@@ -6,7 +6,10 @@ import { TodoModule } from './todo/todo.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, TodoModule],
+  imports: [
+    BrowserModule, 
+    TodoModule
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
