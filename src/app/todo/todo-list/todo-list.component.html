@@ -3,12 +3,12 @@
   Toggle Show Completed/Open
   <input type="checkbox" [(ngModel)]="showCompleted" />
 </div>
-<!-- <div>
+<div>
   Show All
-  <input type="checkbox" [(ngModel)]="showAll" />
-</div> -->
+  <input type="checkbox" [(ngModel)]="showAll" (change)="getAllTodos()" />
+</div>
 <app-todo-item
-  *ngFor="let todo of getTodos()"
+  *ngFor="let todo of getAllTodos()"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>

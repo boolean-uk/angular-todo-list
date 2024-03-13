@@ -11,18 +11,19 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   showCompleted = false;
-  /* showAll = false; */
+  showAll = false;
   todos: Todo[] = [];
 
   async ngOnInit() {
     this.todos = await this.todoService.todos;
   }
 
-  /* getAllTodos(): Todo[] {
-    return this.showCompleted
-      ? this.todos
-      : this.getTodos()
-  }; */
+  getAllTodos(): Todo[] {
+    if (this.showAll) {
+      return this.todos;
+    }
+    return this.getTodos();
+  }
 
   getTodos(): Todo[] {
     return this.showCompleted
