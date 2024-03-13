@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -7,12 +7,15 @@ import { Todo } from '../models/todo';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
 })
+
+
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(private readonly todoService: TodoService) {
+    }
 
-  todos = this.todoService.todos;
+  todos:Promise<Todo[]> = this.todoService.todos;
 
-  updateTodo(todo: Todo) {
+    updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
