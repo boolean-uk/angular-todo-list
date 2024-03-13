@@ -4,10 +4,11 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoCreateComponent } from './todo-create/todo-create.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http';
+import { TodoShowComponent } from './todo-show/todo-show.component'
 
 @NgModule({
-  declarations: [TodoListComponent, TodoCreateComponent, TodoItemComponent],
+  declarations: [TodoListComponent, TodoCreateComponent, TodoItemComponent, TodoShowComponent],
   imports: [CommonModule, FormsModule, HttpClientModule],
   exports: [TodoCreateComponent, TodoListComponent],
 })
