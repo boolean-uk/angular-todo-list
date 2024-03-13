@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
 import { environment } from 'src/environments/environment';
 import { firstValueFrom } from 'rxjs';
@@ -8,27 +8,30 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class TodoService {
-  http = inject(HttpClient);
+  constructor(private http: HttpClient) {}
 
-  get todos(): Promise<Todo[]> {
-    // @ts-ignore
-    return this.http.get(`${environment.apiUrl}/espensolhaug1/todo`);
+  private todoList: Todo[] = [];
+
+  async getTodos(): Promise<Todo[]> {
+    const result = await firstValueFrom(
+      this.http.get<Todo[]>(`${environment.apiUrl}/espensolhaug1/todo`)
+    );
+    this.todoList = result;
+    return this.todoList;
   }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
     const todo = await firstValueFrom(
-      this.http.post(`${environment.apiUrl}/espensolhaug1/todo`, {
+      this.http.post<Todo>(`${environment.apiUrl}/espensolhaug1/todo`, {
         title: title,
       })
     );
-    // @ts-ignore
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     const todo = await firstValueFrom(
-      this.http.put(
+      this.http.put<Todo>(
         `${environment.apiUrl}/espensolhaug1/todo/${updatedTodo.id}`,
         {
           title: updatedTodo.title,
@@ -36,7 +39,6 @@ export class TodoService {
         }
       )
     );
-    // @ts-ignore
     return todo;
   }
 }
