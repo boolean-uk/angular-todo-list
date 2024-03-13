@@ -34,7 +34,7 @@ export class TodoService {
   }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
+    console.log("New", title)
     const todo = await firstValueFrom(this.http.post(`${environment.apiUrl}/nora-hansen/todo`, {
       title: title,
       completed: false
