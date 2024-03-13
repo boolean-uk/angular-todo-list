@@ -50,7 +50,7 @@ export class TodoService {
     //updatera local list
     const index = this.todos.findIndex((todo: Todo) => todo.id === updatedTodo.id);
     this.todos[index] = updatedTodo;
-    //filtrera
+    //filtrera 
     const filteredTodos = this.todos.filter((todo: Todo) => !todo.completed);
     this.todos = filteredTodos;
     return this.updatedTodo;
