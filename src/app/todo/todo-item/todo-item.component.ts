@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-todo-item',
@@ -7,16 +8,26 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-item.component.css'],
 })
 export class TodoItemComponent {
-  @Input('todo') todo: Todo | null = null;
-  @Output('update') update = new EventEmitter<Todo>();
+  @Input() todo: Todo | null = null;
+  @Output() update = new EventEmitter<Todo>();
+  editing: boolean = false; // New property to control edit mode
+  currentEditingTodo: Todo | null = null;
 
   toggleCompleted() {
     if (!this.todo) {
-      throw new Error('cannot toggle complete on null');
+      throw new Error('Cannot toggle completion on null');
     }
-    this.update.emit({
-      ...this.todo,
-      completed: !this.todo.completed,
-    });
+    this.update.emit({ ...this.todo, completed: !this.todo.completed });
+  }
+
+  toggleEdit() {
+    this.editing = !this.editing;
+  }
+
+  saveEdit() {
+    if (this.todo) {
+      this.update.emit(this.todo); // Emit the updated todo
+      this.editing = false; // Exit edit mode
+    }
   }
 }

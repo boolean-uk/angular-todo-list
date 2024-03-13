@@ -6,5 +6,5 @@
     [(ngModel)]="todo"
     required
   />
-  <button>Create</button>
+  <button *ngIf="!showCompleted">Create</button>
 </form>
