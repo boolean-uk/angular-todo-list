@@ -8,12 +8,26 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
-
   todos = this.todoService.todos;
+  filteredTodos: any;
+  boolVal: boolean = false;
+
+  constructor(private readonly todoService: TodoService) {
+    this.filteredTodos = this.todos.then((x) =>
+      x.filter((y) => y.completed === false)
+    );
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
+  }
+
+  filterCompleted() {
+    this.boolVal = !this.boolVal;
+    this.filteredTodos = this.todos.then((x) =>
+      x.filter((y) => y.completed === this.boolVal)
+    );
+    return this.filteredTodos;
   }
 
   async newTodo(title: string) {
