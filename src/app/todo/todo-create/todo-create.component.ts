@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { TodoService } from '../services/todo.service';
 })
 export class TodoCreateComponent {
   @Output('newTodo') newTodo = new EventEmitter<string>();
+  @Input() showCompleted: boolean = false;
 
   todo: string = '';
 

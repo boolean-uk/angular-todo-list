@@ -1,6 +1,16 @@
-<app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<button (click)="toggleShowCompleted()">{{ showCompleted ? 'Show Incomplete Todos' : 'Show Completed Todos' }}</button>
+<app-todo-create [showCompleted]="showCompleted" (newTodo)="newTodo($event)">
+</app-todo-create>
+<ng-container *ngFor="let todo of visibleTodos">
+  <app-todo-item
+    [todo]="todo"
+    (update)="updateTodo($event)"
+  ></app-todo-item>
+  <button (click)="beginEdit(todo.id)">Edit</button>
+    <app-todo-update 
+    *ngIf="currentEditingTodoId === todo.id" 
+    [selectedTodo]="todo" 
+    (updateCompleted)="handleUpdateCompleted()">
+  </app-todo-update>
+</ng-container>
+
