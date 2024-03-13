@@ -9,6 +9,8 @@ import { Todo } from '../models/todo';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  isEditing = false;
+  editedTitle: string = '';
 
   toggleCompleted() {
     if (!this.todo) {
@@ -18,5 +20,21 @@ export class TodoItemComponent {
       ...this.todo,
       completed: !this.todo.completed,
     });
+  }
+  
+  startEdit() {
+    this.isEditing = true;
+    this.editedTitle = this.todo ? this.todo.title : '';
+  }
+
+  exitEdit() {
+    this.isEditing = false;
+  }
+
+  saveChanges() {
+    if (!this.todo) return;
+    this.todo.title = this.editedTitle;
+    this.update.emit(this.todo);
+    this.exitEdit();
   }
 }

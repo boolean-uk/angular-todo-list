@@ -10,7 +10,8 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todos = this.todoService.getTodo();
+  
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
