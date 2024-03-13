@@ -1,4 +1,4 @@
-<ng-template [ngIf]="todo">
+<ng-template [ngIf]="todo && !todo.completed">
   <span>{{ todo.title }}</span>
   <input
     type="checkbox"
