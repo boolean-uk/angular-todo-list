@@ -9,7 +9,7 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-
+  displayCompleted: boolean = false
   todos: any
 
   async ngOnInit() {
@@ -23,5 +23,9 @@ export class TodoListComponent {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = await this.todoService.todos;
+  }
+
+  toggleDisplay() {
+    this.displayCompleted = !this.displayCompleted
   }
 }
