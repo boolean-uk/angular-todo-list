@@ -19,18 +19,19 @@ export class TodoService {
     );
   }
   async addTodo(title: string): Promise<Todo> {
-    if (!title || title === null || title === undefined) {
+    try {
+      const newTask = { title };
+      const todo = await firstValueFrom(
+        this.http.post<Todo>(
+          `https://boolean-api-server.fly.dev/VictorAdamson/todo`,
+          newTask
+        )
+      );
+      this.todoList.push(todo);
+      return todo;
+    } catch (error) {
       throw new Error('Invalid todo-task');
     }
-    const newTask = { title };
-    const todo = await firstValueFrom(
-      this.http.post<Todo>(
-        `https://boolean-api-server.fly.dev/VictorAdamson/todo`,
-        newTask
-      )
-    );
-    this.todoList.push(todo);
-    return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
