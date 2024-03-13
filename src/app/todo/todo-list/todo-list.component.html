@@ -6,5 +6,11 @@
   (update)="updateTodo($event)"
 ></app-todo-item>
 </ng-container>
-<button (click)="toggleDone()">Toggle Done</button>
+<div *ngIf="!toggle">
+  <button (click)="toggleDone()">Show Completed</button>
+</div>
+<div *ngIf="toggle">
+  <button (click)="toggleDone()">Hide Completed</button>
+</div>
+
 
