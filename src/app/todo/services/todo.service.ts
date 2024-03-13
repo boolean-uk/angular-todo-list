@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
 export class TodoService {
 
   constructor(private http: HttpClient) {
-    this.getTodos(); //kör getTodos när man startar program. todos visas ej i browser
+    this.getTodos(); //kör getTodos när man startar program
   }
 
 
@@ -20,20 +20,23 @@ export class TodoService {
 
   async getTodos(): Promise<Todo[]> {
     const result = await firstValueFrom(this.http.get(`${environment.apiUrl}/alexandra7667/todo`));
-    console.log("in get todos method" + result)
-    this.todos = result;
+    //only show todos that have not been completed (completed=false)
+    // @ts-ignore
+    const filteredTodos = result.filter(todo => !todo.completed);
+    this.todos = filteredTodos;
     return this.todos;
   }
 
 
   //POST to create a new todo
-  todo: any;
+  newTodo: any;
 
   async addTodo(title: string): Promise<Todo> {
     const jsonObjectToCreate = {title: title}
     const result = await firstValueFrom(this.http.post(`${environment.apiUrl}/alexandra7667/todo`, jsonObjectToCreate));
-    this.todo = result;
-    return this.todo;
+    this.newTodo = result;
+    this.todos.push(this.newTodo);
+    return this.newTodo;
   }
 
 
@@ -44,6 +47,12 @@ export class TodoService {
     const jsonObjectToUpdate = {title: updatedTodo.title, completed: updatedTodo.completed}
     const result = await firstValueFrom(this.http.put(`${environment.apiUrl}/alexandra7667/todo/${updatedTodo.id}`, jsonObjectToUpdate));
     this.updatedTodo = result;
+    //updatera local list
+    const index = this.todos.findIndex((todo: Todo) => todo.id === updatedTodo.id);
+    this.todos[index] = updatedTodo;
+    //filtrera
+    const filteredTodos = this.todos.filter((todo: Todo) => !todo.completed);
+    this.todos = filteredTodos;
     return this.updatedTodo;
   }
 }
