@@ -28,4 +28,9 @@ export class TodoListComponent {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
   }
+
+  async toggleTodos() {
+    await this.todoService.toggleTodos();
+    this.todos = this.todoService.todos;
+  }
 }
