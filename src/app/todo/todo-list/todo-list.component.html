@@ -1,6 +1,8 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<app-todo-show (toggleShow)="toggleShow($event)" />
+<ng-container *ngFor="let todo of todos | async">
+  <app-todo-item *ngIf="!todo.completed || this.show"  
+    [todo]="todo" 
+    (update)="updateTodo($event)">
+  </app-todo-item>
+</ng-container>
