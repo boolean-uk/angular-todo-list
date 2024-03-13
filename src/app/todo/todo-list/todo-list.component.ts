@@ -13,7 +13,7 @@ export class TodoListComponent {
   todos = this.todoService.todos;
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo.id);
   }
 
   async newTodo(title: string) {
