@@ -10,6 +10,12 @@ export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
 
+  showCompleted: boolean = true;
+
+  // toggleShowCompleted() {
+  //   this.showCompleted = !this.showCompleted 
+  // }
+
   toggleCompleted() {
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
@@ -19,4 +25,6 @@ export class TodoItemComponent {
       completed: !this.todo.completed,
     });
   }
+
+  
 }

@@ -11,13 +11,18 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.todos;
+  showCompleted: boolean = false;
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo.id);
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+
+    toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted 
   }
 }
