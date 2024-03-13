@@ -12,6 +12,8 @@ export class TodoCreateComponent {
   todo: string = '';
 
   submit() {
-    this.newTodo.emit(this.todo);
+    if (this.todo.trim() !== '') {
+      this.newTodo.emit(this.todo);
+    }
   }
 }
