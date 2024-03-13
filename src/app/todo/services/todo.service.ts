@@ -1,52 +1,58 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+export class TodoService {
+  private URL = 'https://boolean-api-server.fly.dev/JensArvid/todo';
+  private todoId = 1;
+  private todoList: Todo[] = [];
+  constructor(private readonly http: HttpClient) {
+    this.loadTodos();
+  }
+
+async loadTodos() {  
+    this.todoList = await firstValueFrom(
+      this.http.get<Todo[]>(this.URL)
+    )
+  }
+
+ get todos(): Promise<Todo[]> {
+    return firstValueFrom(
+      this.http.get<Todo[]>(this.URL)
+    )
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
     const todo = {
       id: this.todoId++,
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+    const newTodo = await firstValueFrom(
+      this.http.post<Todo>(this.URL, todo)
+    );
+
+    this.todoList.push(newTodo);
 
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
+    const todo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+    if (!todo) {
+    
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    
+    const updatedTodoResponse = await firstValueFrom(
+      this.http.put<Todo>(`${this.URL}${updatedTodo.id}`, updatedTodo)
+    );
+    Object.assign(todo, updatedTodo);
+    return updatedTodoResponse;
   }
 }

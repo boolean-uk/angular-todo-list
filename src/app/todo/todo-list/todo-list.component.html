@@ -1,6 +1,8 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button *ngIf="!showDone" (click)="toggleComplete()">Show Completed Items</button>
+<button *ngIf="showDone" (click)="toggleComplete()">Show Incomplete Items</button>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of filteredTodos"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
