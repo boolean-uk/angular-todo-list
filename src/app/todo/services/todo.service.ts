@@ -1,14 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
 import { HttpClient } from '@angular/common/http';
-import { Observable, firstValueFrom } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private baseUrl = "https://boolean-api-server.fly.dev/scandiumSG/todo"
+  private baseUrl = environment.apiUrl;
 
   http = inject(HttpClient)
 
