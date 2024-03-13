@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
-import { Todo } from '../models/todo';
 
 @Component({
   selector: 'app-todo-list',
@@ -8,16 +7,20 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  todoService = inject(TodoService)
+  todos: any;
 
-  todos = this.todoService.todos;
-
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  async ngOnInit() {
+    this.todos = await this.todoService.todos;
+    console.log("tidi", this.todos)
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
-  }
+  // updateTodo(todo: Todo) {
+  //   this.todoService.updateTodo(todo);
+  // }
+
+  // async newTodo(title: string) {
+  //   await this.todoService.addTodo(title);
+  //   this.todos = this.todoService.todos;
+  // }
 }
