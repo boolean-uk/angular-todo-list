@@ -8,9 +8,26 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(private readonly todoService: TodoService) {
+    this.getTodos();
+  }
 
-  todos = this.todoService.todos;
+  public showAll : boolean = false;
+
+  // @ts-ignore
+  todos : Todo[];
+  // @ts-ignore
+  filteredTodos : Todo[];
+
+  async getTodos() {
+    this.todos = await this.todoService.todos;
+    this.showFiltered();
+  } 
+
+  showFiltered(){
+    this.filteredTodos = this.todos.filter((todo : any) => !todo.completed);
+    console.log(this.filteredTodos);
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +35,6 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = await this.todoService.todos;
   }
 }
