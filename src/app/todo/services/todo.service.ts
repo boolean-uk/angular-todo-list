@@ -38,7 +38,7 @@ export class TodoService {
       this.http.put(`${environment.apiUrl}/todo/` + todoToUpdate.id, newTodo)
     );
     if (!updatedTodo) {
-      throw new Error('todo not found1');
+      throw new Error('todo not found');
     }
     return updatedTodo;
   }
