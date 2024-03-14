@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
 import { HttpClient } from '@angular/common/http';
-import { Observable, firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
+
 
 export class TodoService {
   http = inject(HttpClient)
