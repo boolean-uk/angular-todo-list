@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,29 +26,43 @@ export class TodoService {
     },
   ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private readonly http: HttpClient) {}
+
+  get todos(): Promise<Todo[]> {
+    return firstValueFrom(
+      this.http.get<Todo[]>('https://boolean-api-server.fly.dev/martenere/todo')
+    );
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
+    const url = 'https://boolean-api-server.fly.dev/martenere/todo';
     const todo = {
-      id: this.todoId++,
       title: title,
-      completed: false,
     };
-    this.todoList.push(todo);
 
-    return todo;
+    const addedTodo = await firstValueFrom(
+      this.http.post<Todo>(url, todo, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+
+    console.log(addedTodo);
+
+    return addedTodo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+    const url =
+      'https://boolean-api-server.fly.dev/martenere/todo/' +
+      updatedTodo.id.toString();
+    console.log(url);
 
-    return foundTodo;
+    const addedTodo = await firstValueFrom(
+      this.http.put<Todo>(url, updatedTodo, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+
+    return addedTodo;
   }
 }
