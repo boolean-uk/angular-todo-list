@@ -6,3 +6,8 @@
   gap: 0.5em;
   padding-top: 0.5em;
 }
+
+.show-completed {
+  display: flex; /* Set the container to use flexbox */
+  margin-bottom: -1rem;
+}

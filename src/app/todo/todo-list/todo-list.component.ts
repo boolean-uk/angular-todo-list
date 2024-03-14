@@ -7,17 +7,36 @@ import { Todo } from '../models/todo';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
 })
+
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  // Extension
+  displayCompleted: boolean = false;
+  todos: any = this.getFilteredTodos();
 
+
+  toggleDisplayCompleted() {
+    this.displayCompleted = !this.displayCompleted;
+    this.getFilteredTodos();
+  }
+
+  getFilteredTodos() {
+    return this.todos = this.displayCompleted ? 
+      this.todoService.getTodos() : 
+      this.todoService.getTodos().then(todos => todos.filter(todo => todo.completed === false));
+  }
+  
+
+  // Core
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.putTodo(todo);
   }
 
   async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    await this.todoService.postTodo(title);
+    this.todoService.getTodos();
   }
+
+
 }
