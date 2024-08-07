@@ -1,8 +1,5 @@
 <ng-template [ngIf]="todo">
-  <span>{{ todo.title }}</span>
-  <input
-    type="checkbox"
-    (click)="toggleCompleted()"
-    [(ngModel)]="todo.completed"
-  />
+  <span class="todoTitle">{{ todo.title }}</span>
+  <input type="checkbox" (click)="toggleCompleted()" [(ngModel)]="todo.completed" />
+  <p (click)="deleteTodo()" class="delete">❌</p>
 </ng-template>

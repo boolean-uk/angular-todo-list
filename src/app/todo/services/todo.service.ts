@@ -1,52 +1,52 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, find, map, of, switchMap, tap, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  refresh$ = new BehaviorSubject<void>(undefined)
+  todos$ = this.refresh$.pipe(
+    switchMap(() => this.http.get<Todo[]>(`${environment.apiUrl}/wer08/todo`))
+  )
+  todosErrorEmitter$ = new BehaviorSubject<TodoErrorResponse | null>(null)
+  todosError = this.todosErrorEmitter$.asObservable();
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private readonly http: HttpClient) { }
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  addTodo(title: string): Observable<Todo> {
+    let requestBody = { title: title }
+    return this.http.post<Todo>(`${environment.apiUrl}/wer08/todo`, requestBody).pipe(
+      tap(() => this.refresh$.next()),
+      catchError((err: TodoErrorResponse) => {
+        console.error(`Cannot add todo ${title}`)
+        this.todosErrorEmitter$.next(err)
+        return throwError(() => err)
+      })
+    )
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  updateTodo(updatedTodo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${environment.apiUrl}/wer08/todo/${updatedTodo.id}`, updatedTodo).pipe(
+      tap(() => this.refresh$.next())
+    )
+  }
 
-    return foundTodo;
+  deleteTodo(id: number): Observable<Todo> {
+    return this.http.delete<Todo>(`${environment.apiUrl}/wer08/todo/${id}`).pipe(
+      tap(() => this.refresh$.next())
+    )
+  }
+}
+
+export interface TodoErrorResponse {
+  status: number,
+  statusText: string,
+  message: string,
+  error: {
+    error: string
   }
 }
