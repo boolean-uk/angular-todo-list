@@ -1,9 +1,10 @@
 :host {
   display: flex;
+  align-items: center;
   box-sizing: border-box;
   border: 1px solid #818181;
   border-radius: 4px;
-  padding: 0.3em;
+  padding: 0.3em 1em;
 }
 
 span {
@@ -12,4 +13,12 @@ span {
 
 input:hover {
   cursor: pointer;
+}
+
+.todoTitle {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.delete {
+  cursor: pointer
 }
