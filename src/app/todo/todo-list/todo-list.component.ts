@@ -41,6 +41,4 @@ export class TodoListComponent implements OnInit {
   toggleView() {
     this.defaultView = !this.defaultView;
   }
-
-
 }

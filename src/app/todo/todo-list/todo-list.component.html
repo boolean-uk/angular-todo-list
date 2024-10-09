@@ -9,18 +9,16 @@
       ></app-todo-item>
     }
   }
-  <button (click)="toggleView()"> Show completed todos </button>
+  <button (click)="toggleView()"> Show all todos </button>
 } 
 
 @else {
   @for (todo of todos; track todo.id) {
-    @if (todo.completed === true) {
       <app-todo-item
         [todo]="todo"
         (update)="updateTodo($event)"
       ></app-todo-item>
-    }
   }
-  <button (click)="toggleView()"> Show unfinished business </button>
+  <button (click)="toggleView()"> Show unfinished business only </button>
 }
 
