@@ -14,11 +14,11 @@ export class TodoService {
   // Create a behavioursubject to allow for signals when updating the list
   private todoSubject = new BehaviorSubject<Todo[]>([]);
   public todos$ = this.todoSubject.asObservable();
-  public hideCompleted = false;
+  public hideCompleted = true;
 
   toggleHideCompleted() {
     this.hideCompleted = !this.hideCompleted;
-    this.fetchAllTasks()
+    this.fetchAllTasks();
   }
 
   constructor() {
@@ -53,7 +53,18 @@ export class TodoService {
   }
 
   public updateTodo(updatedTodo: Todo): Observable<Todo> {
-    const url = `${environment.apiUrl}/${updatedTodo.id}`;
-    return this.httpClient.put<Todo>(url, updatedTodo);
+    return this.httpClient
+      .put<Todo>(`${environment.apiUrl}/${updatedTodo.id}`, updatedTodo)
+      .pipe(
+        tap((updatedTodo) => {
+          const currentTdos = this.todoSubject.getValue().map((curr) => {
+            if (curr.id === updatedTodo.id) {
+              return updatedTodo;
+            }
+            return curr;
+          });
+          this.todoSubject.next([...currentTdos]);
+        })
+      );
   }
 }

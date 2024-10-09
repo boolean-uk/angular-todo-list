@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -16,6 +16,7 @@ export class TodoListComponent {
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo).subscribe()
+    this.todoService.getAllTasks().pipe(tap(data => {console.log("inside pipe.", data)})).subscribe()
   }
 
   public newTodo(title: string) {
