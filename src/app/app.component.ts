@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-todo-list';
+  showAll = false;
+
+  showAllTodos() {
+    this.showAll = !this.showAll;
+  }
 }
