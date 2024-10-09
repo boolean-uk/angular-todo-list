@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
+  /*private todoId = 1;
   private todoList: Todo[] = [
     {
       id: this.todoId++,
@@ -22,31 +25,34 @@ export class TodoService {
       title: 'start talking to the api',
       completed: false,
     },
-  ];
+  ];*/
+
+  private httpClient = inject(HttpClient)
+
+  private url = 'https://boolean-uk-api-server.fly.dev/tuvaea/todo'
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  //todos: Promise<Todo[]> = Promise.resolve(this.todoList);
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  public getAllTodos(): Observable<Todo[]> {
+    return this.httpClient.get<Todo[]>(this.url)
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
+  public addTodo(todo: string): Observable<Todo>{
+    console.log("adding task ", todo)
+    return this.httpClient.post<Todo>(this.url, {title: todo})
+  }
+
+  public updateTodo(updatedTodo: Todo): Observable<Todo> {
     // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+    /*const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
     if (!foundTodo) {
       throw new Error('todo not found');
     }
     Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+    return foundTodo;*/
+    const url = `${this.url}/${updatedTodo.id}`;  // Assuming the API expects /:id for update
+    return this.httpClient.put<Todo>(url, updatedTodo);
   }
 }

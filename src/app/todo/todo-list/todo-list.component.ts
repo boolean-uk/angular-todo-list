@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -8,16 +9,41 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todoService = inject(TodoService)
+
+  showCompleted: boolean = false;
+
+  todos$: Observable<Todo[]> = this.todoService.getAllTodos()
+  .pipe(
+    map(todos => todos.filter(todo => !todo.completed))  
+  );
+
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted;
+    this.todos$ = this.todoService.getAllTodos()
+    .pipe(
+      map(todos => this.showCompleted ? todos : todos.filter(todo => !todo.completed))
+    );
+  }
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo).subscribe(
+      (response) => {
+        console.log("Todo updated:", response);
+        this.todos$ = this.todoService.getAllTodos().pipe(
+          map(todos => this.showCompleted ? todos : todos.filter(todo => !todo.completed))
+        );
+      }
+   );
   }
 
   async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todoService.addTodo(title).subscribe(() => {
+      this.todos$ = this.todoService.getAllTodos()
+      .pipe(
+        map(todos => this.showCompleted ? todos : todos.filter(todo => !todo.completed))
+      );
+    });
   }
 }
