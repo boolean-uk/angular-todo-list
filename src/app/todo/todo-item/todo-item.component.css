@@ -10,6 +10,14 @@ span {
   flex: 1;
 }
 
+input {
+  margin: 0 10px;
+}
+
 input:hover {
+  cursor: pointer;
+}
+
+button:hover {
   cursor: pointer;
 }
