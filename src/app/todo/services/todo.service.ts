@@ -52,7 +52,7 @@ export class TodoService {
     Object.assign(foundTodo, updatedTodo);
 
     return foundTodo;*/
-    const url = `${this.url}/${updatedTodo.id}`;  // Assuming the API expects /:id for update
+    const url = `${this.url}/${updatedTodo.id}`;
     return this.httpClient.put<Todo>(url, updatedTodo);
   }
 }
