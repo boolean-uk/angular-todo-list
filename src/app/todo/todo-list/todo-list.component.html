@@ -1,6 +1,23 @@
-<app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<div class="todo-list-container">
+  <app-todo-create
+    [todoToEdit]="todoToEdit"
+    (newTodo)="newTodo($event)"
+  ></app-todo-create>
+
+  <hr />
+
+  <button class="toggle-btn" (click)="toggleShowCompleted()">
+    {{ showCompleted ? "Hide Completed" : "Show Completed" }}
+  </button>
+
+  <ul class="todo-list">
+    <li class="todo-item" *ngFor="let todo of getFilteredTodos()">
+      <app-todo-item
+        [todo]="todo"
+        (update)="updateTodo($event)"
+        (edit)="editTodo($event)"
+        (delete)="deleteTodo(todo.id)"
+      ></app-todo-item>
+    </li>
+  </ul>
+</div>
