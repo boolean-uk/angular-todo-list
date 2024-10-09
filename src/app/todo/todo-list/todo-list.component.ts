@@ -8,16 +8,17 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  todos: Todo[] = [];
 
-  todos = this.todoService.todos;
+  constructor(private readonly todoService: TodoService) {
+    this.todoService.getTodos().subscribe((todos) => (this.todos = todos));
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
   async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todoService.addTodo(title);
   }
 }
