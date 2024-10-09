@@ -1,6 +1,14 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<label for="onlyCompleteCheck"> Show the completed todos
+  <input
+    name="onlyCompleteCheck"
+    type="checkbox"
+    (click)="changeDisplayed()"
+    [(ngModel)] = "this.onlyCompleted"
+  />
+</label>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of toDisplay"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
