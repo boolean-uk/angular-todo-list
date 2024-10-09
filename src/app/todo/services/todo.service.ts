@@ -1,52 +1,58 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private httpClient = inject(HttpClient);
+  private basepath = 'https://boolean-uk-api-server.fly.dev/dagandreas/todo';
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  // Create a behavioursubject to allow for signals when updating the list
+  private todoSubject = new BehaviorSubject<Todo[]>([]);
+  public todos$ = this.todoSubject.asObservable();
+  public hideCompleted = false;
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  toggleHideCompleted() {
+    this.hideCompleted = !this.hideCompleted;
+    this.fetchAllTasks()
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  constructor() {
+    console.log('fetching tasks');
+    this.fetchAllTasks();
+  }
 
-    return foundTodo;
+  private fetchAllTasks() {
+    this.httpClient.get<Todo[]>(this.basepath).subscribe((todos) => {
+      this.todoSubject.next(todos);
+    });
+  }
+
+  getAllTasks(): Observable<Todo[]> {
+    return this.todos$.pipe(
+      map((todos: Todo[]) => {
+        if (this.hideCompleted) {
+          return todos.filter((todo) => !todo.completed);
+        }
+        return todos;
+      })
+    );
+  }
+
+  addTodo(title: string): Observable<Todo> {
+    return this.httpClient.post<Todo>(this.basepath, { title }).pipe(
+      tap((newTodo) => {
+        const currentTdos = this.todoSubject.getValue();
+        this.todoSubject.next([...currentTdos, newTodo]);
+      })
+    );
+  }
+
+  public updateTodo(updatedTodo: Todo): Observable<Todo> {
+    const url = `${this.basepath}/${updatedTodo.id}`;
+    return this.httpClient.put<Todo>(url, updatedTodo);
   }
 }
