@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,14 +11,20 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todos: Todo[] = [];
+
+  subscription: Subscription = this.todoService.todos$.subscribe(
+    (data: any[]) => {
+      console.log('Inside subscribe()');
+      this.todos = data;
+    }
+  );
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+  public newTodo(title: string) {
+    this.todoService.addTodo(title);
   }
 }
