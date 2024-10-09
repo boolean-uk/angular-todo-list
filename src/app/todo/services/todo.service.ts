@@ -9,27 +9,10 @@ import { firstValueFrom, Observable } from 'rxjs';
 })
 export class TodoService {
   constructor(private httpClient: HttpClient) {}
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Observable<Todo[]> = this.httpClient.get<Todo[]>(environment.apiUrl);
+  async todos(): Promise<Todo[]> {
+    return firstValueFrom(this.httpClient.get<Todo[]>(environment.apiUrl));
+  }
 
   async addTodo(title: string): Promise<Todo> {
     const todo = await firstValueFrom(this.httpClient.post<Todo>(environment.apiUrl, { title }));
@@ -37,7 +20,7 @@ export class TodoService {
     if (!todo) {
       throw new Error('Failed to create todo');
     }
-  
+    
     return todo;
   }
   
