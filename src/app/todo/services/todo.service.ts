@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  constructor(private httpClient: HttpClient) {}
   private todoId = 1;
   private todoList: Todo[] = [
     {
@@ -25,28 +29,26 @@ export class TodoService {
   ];
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Observable<Todo[]> = this.httpClient.get<Todo[]>(environment.apiUrl);
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
+    const todo = await firstValueFrom(this.httpClient.post<Todo>(environment.apiUrl, { title }));
+  
+    if (!todo) {
+      throw new Error('Failed to create todo');
+    }
+  
     return todo;
   }
+  
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+    console.log(updatedTodo);
+    
+
+  const todo = await firstValueFrom(this.httpClient.put<Todo>(environment.apiUrl + `/${updatedTodo.id}`, {title: updatedTodo.title, completed: updatedTodo.completed})) 
+
+    return todo;
   }
 }
