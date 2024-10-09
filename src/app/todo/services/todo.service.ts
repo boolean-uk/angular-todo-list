@@ -1,10 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private http = inject(HttpClient);
   private todoId = 1;
   private todoList: Todo[] = [
     {
@@ -24,8 +28,11 @@ export class TodoService {
     },
   ];
 
+  public getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${environment.apiUrl}`);
+  }
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Observable<Todo[]> = this.http.get<Todo[]>(`${environment.apiUrl}`);
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,6 +41,9 @@ export class TodoService {
       title: title,
       completed: false,
     };
+    this.http.post(`${environment.apiUrl}`, todo).subscribe((response) => {
+      console.log('Server response: ', response);
+    });
     this.todoList.push(todo);
 
     return todo;
@@ -41,12 +51,18 @@ export class TodoService {
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+    const url = `${environment.apiUrl}/${updatedTodo.id}`;
 
-    return foundTodo;
+    return new Promise((resolve) => {
+      this.http.put<Todo>(url, updatedTodo).subscribe((response) => {
+        const foundTodo = this.todoList.find(
+          (todo) => todo.id === updatedTodo.id
+        );
+        if (foundTodo) {
+          Object.assign(foundTodo, updatedTodo); // Update the local version
+        }
+        resolve(response);
+      });
+    });
   }
 }
