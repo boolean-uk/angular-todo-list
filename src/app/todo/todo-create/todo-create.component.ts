@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 
 @Component({
@@ -10,6 +10,8 @@ export class TodoCreateComponent {
   @Output('newTodo') newTodo = new EventEmitter<string>();
 
   todo: string = '';
+
+  todoService = inject(TodoService)
 
   submit() {
     this.newTodo.emit(this.todo);
