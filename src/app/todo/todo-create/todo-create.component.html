@@ -4,7 +4,10 @@
     placeholder="todo: clean room"
     name="todo"
     [(ngModel)]="todo"
+    (input)="todo ? null : reset()"
     required
   />
-  <button>Create</button>
+  <button [disabled]="!todo.trim()">
+    {{ todoToEdit ? "Update" : "Create" }}
+  </button>
 </form>

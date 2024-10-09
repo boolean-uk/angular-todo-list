@@ -1,15 +1,53 @@
-:host {
+.todo-item-container {
   display: flex;
-  box-sizing: border-box;
-  border: 1px solid #818181;
-  border-radius: 4px;
-  padding: 0.3em;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s;
 }
 
-span {
-  flex: 1;
+.todo-item-container:hover {
+  background-color: #e9ecef;
 }
 
-input:hover {
+.todo-title {
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.todo-title:hover {
+  text-decoration: underline;
+}
+
+.todo-checkbox {
+  margin-left: 10px;
+  transform: scale(1.2);
+}
+
+.delete-btn {
+  background: none;
+  color: #dc3545;
+  border: none; 
+  font-size: 20px;
+  cursor: pointer; 
+  padding: 0;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  color: #c82333;
+}
+
+.delete-btn:focus {
+  outline: none;
+}
+
+input {
   cursor: pointer;
 }
