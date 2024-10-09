@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { TodoService } from '../services/todo.service';
+import { Todo } from '../models/todo';
 
 @Component({
   selector: 'app-todo-create',
@@ -8,10 +9,21 @@ import { TodoService } from '../services/todo.service';
 })
 export class TodoCreateComponent {
   @Output('newTodo') newTodo = new EventEmitter<string>();
-
   todo: string = '';
 
+  constructor(private todoService: TodoService) {}
+
   submit() {
-    this.newTodo.emit(this.todo);
+    if (this.todo.trim()) {
+      this.todoService.addTodo(this.todo).subscribe({
+        next: (createdTodo: Todo) => {
+          this.newTodo.emit(createdTodo.title);
+          this.todo = '';
+        },
+        error: (err) => {
+          console.error('Error creating todo', err);
+        }
+      });
+    }
   }
 }

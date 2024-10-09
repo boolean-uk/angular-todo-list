@@ -1,52 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private apiURL = 'https://boolean-uk-api-server.fly.dev/johnfa1508/todo';
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private http: HttpClient) {}
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.apiURL);
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
+  addTodo(title: string): Observable<Todo> {
+    const newTodo = {
+      title: title,
+      completed: false,
     }
-    Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+    return this.http.post<Todo>(this.apiURL, newTodo);
+  }
+
+  updateTodo(updatedTodo: Todo): Observable<Todo> {
+    const url = `${this.apiURL}/${updatedTodo.id}`;
+
+    return this.http.put<Todo>(url, updatedTodo);
   }
 }
