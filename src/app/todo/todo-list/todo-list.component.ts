@@ -9,11 +9,14 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
+  showCompleted = false;
+
   constructor(private readonly todoService: TodoService) {}
 
   ngOnInit(): void {
     this.fetchTodos();
   }
+
   fetchTodos(): void {
     this.todoService.getTodos().subscribe((todos) => {
       this.todos = todos;
@@ -33,5 +36,13 @@ export class TodoListComponent implements OnInit {
         this.todos[index] = updatedTodo; 
       }
     });
+  }
+
+  get filteredTodos(): Todo[] {
+    return this.todos.filter(todo => this.showCompleted ? todo.completed : !todo.completed);
+  }
+
+  toggleCompleted(): void {
+    this.showCompleted = !this.showCompleted;
   }
 }
