@@ -10,8 +10,8 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   todos: Todo[] =  []
   showCompleted: boolean = false;
+  todoToEdit: Todo | null = null;
 
-  
   constructor(private readonly todoService: TodoService) {
     this.fetchTodos();
   }
@@ -28,16 +28,25 @@ export class TodoListComponent {
     });
   }
 
-  newTodo(title: string) {
-    this.todoService.addTodo(title).subscribe(() => {
-      this.fetchTodos();
-    });
+  newTodo(todo: Todo) {
+    if (todo.id) {
+      this.todoService.updateTodo({ ...todo, title: todo.title }).subscribe(() => {
+        this.fetchTodos();
+        this.todoToEdit = null;
+      });
+    } else {
+      this.todoService.addTodo(todo.title).subscribe(() => {
+        this.fetchTodos();
+      });
+    }
   }
 
   deleteTodo(todoId: number) {
     this.todoService.deleteTodo(todoId).subscribe(() => {
       this.todos = this.todos.filter(todo => todo.id !== todoId);
     });
+
+    this.resetEditingState();
   }
 
   toggleShowCompleted() {
@@ -48,6 +57,15 @@ export class TodoListComponent {
     if (this.showCompleted) {
       return this.todos;
     }
+
     return this.todos.filter(todo => !todo.completed);
+  }
+
+  editTodo(todo: Todo) {
+    this.todoToEdit = todo;
+  }
+
+  resetEditingState() {
+    this.todoToEdit = null;
   }
 }

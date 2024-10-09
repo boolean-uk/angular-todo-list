@@ -1,9 +1,12 @@
 <ng-template [ngIf]="todo">
-  <span>{{ todo.title }}</span>
-  <input
-    type="checkbox"
-    (click)="toggleCompleted()"
-    [(ngModel)]="todo.completed"
-  />
-  <button (click)="deleteTodo()">Delete</button>
+  <div class="todo-item-container">
+    <span class="todo-title" (click)="editTodo()"> {{ todo.title }}</span>
+    <input
+      type="checkbox"
+      (click)="toggleCompleted()"
+      [(ngModel)]="todo.completed"
+      class="todo-checkbox"
+    />
+    <button (click)="deleteTodo()" class="delete-btn">&times;</button>
+  </div>
 </ng-template>

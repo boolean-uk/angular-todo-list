@@ -36,4 +36,10 @@ export class TodoItemComponent {
       this.delete.emit(this.todo.id)
     }
   }
+
+  editTodo() {
+    if (this.todo) {
+      this.update.emit(this.todo);
+    }
+  }
 }

@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { TodoService } from '../services/todo.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Todo } from '../models/todo';
 
 @Component({
@@ -8,22 +7,33 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
-  @Output('newTodo') newTodo = new EventEmitter<string>();
+  @Output('newTodo') newTodo = new EventEmitter<Todo>();
+  @Input() todoToEdit: Todo | null = null;
   todo: string = '';
 
-  constructor(private todoService: TodoService) {}
+  ngOnChanges() {
+    if (this.todoToEdit) {
+      this.todo = this.todoToEdit.title;
+    } else {
+      this.todo = '';
+    }
+  }
 
   submit() {
     if (this.todo.trim()) {
-      this.todoService.addTodo(this.todo).subscribe({
-        next: (createdTodo: Todo) => {
-          this.newTodo.emit(createdTodo.title);
-          this.todo = '';
-        },
-        error: (err) => {
-          console.error('Error creating todo', err);
-        }
-      });
+      const todoToEmit: Todo = {
+        id: this.todoToEdit?.id || 0,
+        title: this.todo,
+        completed: false
+      };
+
+      this.newTodo.emit(todoToEmit);
+      this.todo = '';
     }
+  }
+
+  reset() {
+    this.todo = '';
+    this.todoToEdit = null;
   }
 }
