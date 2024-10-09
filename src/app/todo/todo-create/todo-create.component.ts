@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { TodoService } from '../services/todo.service';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 
 @Component({
   selector: 'app-todo-create',
