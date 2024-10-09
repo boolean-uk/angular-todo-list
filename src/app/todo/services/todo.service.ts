@@ -2,13 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
   private httpClient = inject(HttpClient);
-  private basepath = 'https://boolean-uk-api-server.fly.dev/dagandreas/todo';
+  // private basepath = 'https://boolean-uk-api-server.fly.dev/dagandreas/todo';
 
   // Create a behavioursubject to allow for signals when updating the list
   private todoSubject = new BehaviorSubject<Todo[]>([]);
@@ -26,7 +27,7 @@ export class TodoService {
   }
 
   private fetchAllTasks() {
-    this.httpClient.get<Todo[]>(this.basepath).subscribe((todos) => {
+    this.httpClient.get<Todo[]>(environment.apiUrl).subscribe((todos) => {
       this.todoSubject.next(todos);
     });
   }
@@ -43,7 +44,7 @@ export class TodoService {
   }
 
   addTodo(title: string): Observable<Todo> {
-    return this.httpClient.post<Todo>(this.basepath, { title }).pipe(
+    return this.httpClient.post<Todo>(environment.apiUrl, { title }).pipe(
       tap((newTodo) => {
         const currentTdos = this.todoSubject.getValue();
         this.todoSubject.next([...currentTdos, newTodo]);
@@ -52,7 +53,7 @@ export class TodoService {
   }
 
   public updateTodo(updatedTodo: Todo): Observable<Todo> {
-    const url = `${this.basepath}/${updatedTodo.id}`;
+    const url = `${environment.apiUrl}/${updatedTodo.id}`;
     return this.httpClient.put<Todo>(url, updatedTodo);
   }
 }
