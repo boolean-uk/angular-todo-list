@@ -4,6 +4,7 @@
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
+
 <div>
   <button (click)="toggleShowCompleted()">
     {{ showCompleted ? 'Show Non-Completed' : 'Show Completed' }}
