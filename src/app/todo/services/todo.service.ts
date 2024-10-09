@@ -44,7 +44,9 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
+
+    console.log('in post')
+    this.httpClient.post(`${environment.apiUrl}/${environment.name}/todo`, todo).subscribe();
 
     return todo;
   }
