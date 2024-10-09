@@ -10,6 +10,7 @@ import { TodoService } from '../services/todo.service';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  @Output('delete') delete = new EventEmitter<number>();
 
   constructor(private todoService: TodoService) {}
 
@@ -28,5 +29,11 @@ export class TodoItemComponent {
         console.error('Error updating todo', error);
       }
     });
+  }
+
+  deleteTodo() {
+    if (this.todo) {
+      this.delete.emit(this.todo.id)
+    }
   }
 }

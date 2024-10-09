@@ -34,6 +34,12 @@ export class TodoListComponent {
     });
   }
 
+  deleteTodo(todoId: number) {
+    this.todoService.deleteTodo(todoId).subscribe(() => {
+      this.todos = this.todos.filter(todo => todo.id !== todoId);
+    });
+  }
+
   toggleShowCompleted() {
     this.showCompleted = !this.showCompleted;
   }

@@ -9,5 +9,6 @@
     *ngFor="let todo of getFilteredTodos()"
     [todo]="todo"
     (update)="updateTodo($event)"
+    (delete)="deleteTodo(todo.id)"
   ></app-todo-item>
 </ul>
