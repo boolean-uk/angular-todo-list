@@ -13,5 +13,6 @@ export class TodoCreateComponent {
 
   submit() {
     this.newTodo.emit(this.todo);
+    this.todo = '';
   }
 }

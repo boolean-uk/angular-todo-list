@@ -1,8 +1,25 @@
 <ng-template [ngIf]="todo">
-  <span>{{ todo.title }}</span>
+
   <input
+    *ngIf="isEditing"
+    type="text"
+    [(ngModel)]="todo.title"
+    placeholder="Edit todo title"
+  />
+  <span *ngIf="!isEditing">{{ todo.title }}</span>
+  
+  <input
+    *ngIf="!isEditing"
     type="checkbox"
     (click)="toggleCompleted()"
     [(ngModel)]="todo.completed"
   />
+
+  <button (click)="toggleEdit()">
+    {{ isEditing ? 'Cancel' : 'Edit' }}
+  </button>
+  
+  <button *ngIf="isEditing" (click)="handleUpdate()">Update</button>
 </ng-template>
+
+
