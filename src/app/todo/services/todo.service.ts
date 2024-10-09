@@ -1,52 +1,39 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private apiURL = environment.apiUrl
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
-
+  constructor(private http: HttpClient) {}
+  
+  //todos: Observable<Todo[]> = this.http.get<Todo[]>(this.apiURL)
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  public getTodoList(): Observable<Todo[]> {
+    const req = this.http.get<Todo[]>(this.apiURL)
+    console.log(req)
+    return this.http.get<Todo[]>(this.apiURL)
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+  public addTodo(title: string): Observable<Todo> {
+    
+    // TODO: replace with a POST request
+    const newTodo = { title }
+    return this.http.post<Todo>(this.apiURL, newTodo)
+    
+    
+  }
+
+  public updateTodo(updatedTodo: Todo): Observable<Todo> {
+    // TODO: replace with a PUT request
+    return this.http.put<Todo>(`${this.apiURL}/${updatedTodo.id}`, updatedTodo)
   }
 }
