@@ -24,7 +24,7 @@ export class TodoCreateComponent {
       const todoToEmit: Todo = {
         id: this.todoToEdit?.id || 0,
         title: this.todo,
-        completed: false
+        completed: this.todoToEdit?.completed || false
       };
 
       this.newTodo.emit(todoToEmit);

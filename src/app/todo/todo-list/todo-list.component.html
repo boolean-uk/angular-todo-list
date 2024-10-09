@@ -14,7 +14,8 @@
     <li class="todo-item" *ngFor="let todo of getFilteredTodos()">
       <app-todo-item
         [todo]="todo"
-        (update)="editTodo($event)"
+        (update)="updateTodo($event)"
+        (edit)="editTodo($event)"
         (delete)="deleteTodo(todo.id)"
       ></app-todo-item>
     </li>

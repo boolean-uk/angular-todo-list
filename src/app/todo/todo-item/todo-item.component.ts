@@ -10,6 +10,7 @@ import { TodoService } from '../services/todo.service';
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
   @Output('update') update = new EventEmitter<Todo>();
+  @Output('edit') edit = new EventEmitter<Todo>();
   @Output('delete') delete = new EventEmitter<number>();
 
   constructor(private todoService: TodoService) {}
@@ -39,7 +40,7 @@ export class TodoItemComponent {
 
   editTodo() {
     if (this.todo) {
-      this.update.emit(this.todo);
+      this.edit.emit(this.todo);
     }
   }
 }
