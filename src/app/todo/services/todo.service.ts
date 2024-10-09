@@ -1,31 +1,22 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private http = inject(HttpClient);
   private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private todoList: Observable<Todo[]> = this.todos();
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  public todos(): Observable<Todo[]> {
+    this.todoList = this.todoList = this.http.get<Todo[]>(`${environment.apiUrl}`);
+    return this.todoList
+  }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
@@ -34,19 +25,25 @@ export class TodoService {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
-
+    this.http.post(`${environment.apiUrl}`, todo).subscribe((response) => {
+      console.log('Server response: ', response)
+    });
+    this.todoList = this.todos()
     return todo;
+  }
+
+  public getTodo(id: number): Observable<Todo> {
+    return this.http.get<Todo>(`${environment.apiUrl + '/' +id.toString()}`);
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
     // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    console.log(updatedTodo)
+    const foundTodo = () => {
+      this.http.put<Todo>(`${environment.apiUrl + '/' + updatedTodo.id.toString()}`, updatedTodo).subscribe((response) => {
+      console.log('Server response: ', response)
+    })}
+    foundTodo()
+    return updatedTodo;
   }
 }
