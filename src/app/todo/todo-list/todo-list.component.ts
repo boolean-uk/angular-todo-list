@@ -8,26 +8,38 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  todos: Todo[] = [];
+  private todos: Todo[] = [];
+  private hideCompleted = false;
 
   constructor(private readonly todoService: TodoService) {
+    this.loadTodos();
+  }
+
+  loadTodos() {
     this.todoService.getTodos().subscribe((todos) => {
-      this.todos = todos.filter((todo) => {
-        if (this.todoService.hideCompleted && todo.completed) return false;
-        else return true;
-      });
+      this.todos = todos;
     });
   }
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo).subscribe(() => {
+      this.loadTodos();
+    });
   }
 
   newTodo(title: string) {
+    this.todoService.addTodo(title).subscribe((todo) => {
+      this.todos.push(todo);
+    });
     this.todoService.addTodo(title);
   }
 
   toggleCompleted() {
-    this.todoService.toggleHideCompleted();
+    this.hideCompleted = !this.hideCompleted;
+  }
+
+  getTodos() {
+    if (this.hideCompleted) return this.todos.filter((todo) => !todo.completed);
+    else return this.todos;
   }
 }

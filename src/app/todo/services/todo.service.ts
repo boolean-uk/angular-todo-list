@@ -8,13 +8,6 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class TodoService {
-  private headers = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-  public hideCompleted = false;
-
   constructor(private http: HttpClient) {}
 
   getTodos(): Observable<Todo[]> {
@@ -22,25 +15,16 @@ export class TodoService {
   }
 
   addTodo(title: string): Observable<Todo> {
-    return this.http.post<Todo>(
-      environment.apiUrl,
-      {
-        title: title,
-        completed: false,
-      },
-      this.headers,
-    );
+    return this.http.post<Todo>(environment.apiUrl, {
+      title: title,
+      completed: false,
+    });
   }
 
   updateTodo(updatedTodo: Todo): Observable<Todo> {
     return this.http.put<Todo>(
       `${environment.apiUrl}/${updatedTodo.id}`,
       updatedTodo,
-      this.headers,
     );
-  }
-
-  toggleHideCompleted() {
-    this.hideCompleted = !this.hideCompleted;
   }
 }
