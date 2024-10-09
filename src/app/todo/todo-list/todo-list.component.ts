@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -7,17 +7,36 @@ import { Todo } from '../models/todo';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
 })
-export class TodoListComponent {
+export class TodoListComponent implements OnInit {
+  todos: Todo[] = [];
+  showCompleted = false;
+
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
-
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  ngOnInit() {
+    this.todoService.getTodos().subscribe((response) => {
+      this.todos = response;
+    });
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+  newTodo(title: string) {
+    this.todoService.addTodo(title).subscribe((response) => {
+      this.todos.push(response);
+    });
+  }
+
+  updateTodo(todo: Todo) {
+    this.todoService.updateTodo(todo).subscribe((response) => {
+      const index = this.todos.findIndex((t) => t.id === response.id);
+      this.todos[index] = response;
+    });
+  }
+
+  get filteredTodos(): Todo[] {
+    return this.todos.filter((t) => this.showCompleted ? t.completed : !t.completed)
+  }
+
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted;
   }
 }
