@@ -1,15 +1,26 @@
-:host {
-  display: block;
-  box-sizing: border-box;
-}
-
 form {
   display: flex;
-  gap: 4px;
+  gap: 0.5em;
+  margin-bottom: 1em;
 }
 
-input {
+input[type="text"] {
   flex: 1;
-  font-size: 14px;
-  padding: 0.2em;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #1e3a8a;
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #1a2e6b;
 }
