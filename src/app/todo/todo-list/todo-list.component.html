@@ -1,6 +1,12 @@
+<!DOCTYPE html>
+<div class="headerDiv">
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button class="hideButton" (click)="toggleCompleted()">
+  <input type="checkbox" [checked]="showCompleted">
+</button>
+</div>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of filteredTodos$ | async"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
