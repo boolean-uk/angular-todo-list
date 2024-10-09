@@ -1,3 +1,6 @@
 <div class="todo-container">
-  <app-todo-list></app-todo-list>
+  <app-todo-list [showAll]="showAll"></app-todo-list>
+  <button (click)="showAllTodos()">
+    {{ showAll ? 'Hide completed todos' : 'Show all todos'}}
+  </button>
 </div>

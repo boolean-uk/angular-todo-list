@@ -9,3 +9,10 @@
   padding-top: 0.5em;
   width: 30vw;
 }
+
+button {
+  margin-top: 1em;
+  width: auto;
+  margin: 1em auto;
+  cursor: pointer;
+}
