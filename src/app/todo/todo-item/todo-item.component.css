@@ -1,15 +1,29 @@
 :host {
   display: flex;
-  box-sizing: border-box;
-  border: 1px solid #818181;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+:host:last-child {
+  border-bottom: none;
+}
+
+input[type="checkbox"] {
+  margin-right: 1em;
+}
+
+button {
+  background-color: #1e3a8a;
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
   border-radius: 4px;
-  padding: 0.3em;
-}
-
-span {
-  flex: 1;
-}
-
-input:hover {
   cursor: pointer;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #1a2e6b;
 }

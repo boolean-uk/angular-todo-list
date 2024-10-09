@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-todo-create',
@@ -7,11 +6,13 @@ import { TodoService } from '../services/todo.service';
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
-  @Output('newTodo') newTodo = new EventEmitter<string>();
+  @Output() newTodo = new EventEmitter<string>();
+  title: string = '';
 
-  todo: string = '';
-
-  submit() {
-    this.newTodo.emit(this.todo);
+  addTodo() {
+    if (this.title.trim()) {
+      this.newTodo.emit(this.title);
+      this.title = '';
+    }
   }
 }
