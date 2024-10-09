@@ -6,3 +6,15 @@
   gap: 0.5em;
   padding-top: 0.5em;
 }
+
+.headerDiv {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.hideButton {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+}
