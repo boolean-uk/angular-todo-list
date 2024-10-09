@@ -13,6 +13,7 @@ export class TodoService {
       'Content-Type': 'application/json',
     }),
   };
+  public hideCompleted = false;
 
   constructor(private http: HttpClient) {}
 
@@ -37,5 +38,9 @@ export class TodoService {
       updatedTodo,
       this.headers,
     );
+  }
+
+  toggleHideCompleted() {
+    this.hideCompleted = !this.hideCompleted;
   }
 }

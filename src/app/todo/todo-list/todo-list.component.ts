@@ -11,14 +11,23 @@ export class TodoListComponent {
   todos: Todo[] = [];
 
   constructor(private readonly todoService: TodoService) {
-    this.todoService.getTodos().subscribe((todos) => (this.todos = todos));
+    this.todoService.getTodos().subscribe((todos) => {
+      this.todos = todos.filter((todo) => {
+        if (this.todoService.hideCompleted && todo.completed) return false;
+        else return true;
+      });
+    });
   }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
-  async newTodo(title: string) {
+  newTodo(title: string) {
     this.todoService.addTodo(title);
+  }
+
+  toggleCompleted() {
+    this.todoService.toggleHideCompleted();
   }
 }
