@@ -10,7 +10,14 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  async function fetchTodos() {
+    try {
+      const todos: Todo[] = await this.todoService.getTodos();
+      console.log(todos);
+    } catch (error) {
+      console.error('Error fetching todos:', error);
+    }
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);

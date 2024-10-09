@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private httpClient = inject(HttpClient)
   private todoId = 1;
   private todoList: Todo[] = [
     {
@@ -26,6 +28,10 @@ export class TodoService {
 
   // TODO replace with a get request
   todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+
+  async getTodos(): Promise<Todo[]>{
+    return this.httpClient.get<Todo[]>('stuff')
+  }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
