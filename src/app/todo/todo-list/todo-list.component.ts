@@ -40,7 +40,7 @@ export class TodoListComponent {
 
   filterTodo(): Todo[] {
     if(this.onlyShowComplete) {
-      return this.todos;
+      return this.todos.filter(t => t.completed);
     }
     return this.todos.filter(t => !t.completed);
   }

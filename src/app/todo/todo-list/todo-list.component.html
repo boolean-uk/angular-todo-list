@@ -2,7 +2,7 @@
   <h1>Todo list</h1>
 
   <button (click)="toggleTodo()">
-    {{ onlyShowComplete ? 'Show uncomplete Todos' : 'Show all Todos' }}
+    {{ onlyShowComplete ? 'Show uncompleted Todos' : 'Show completed Todos' }}
   </button>
   
   <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
