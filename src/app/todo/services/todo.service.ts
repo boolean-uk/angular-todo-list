@@ -1,5 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +27,18 @@ export class TodoService {
     },
   ];
 
+  private httpClient = inject(HttpClient)
+
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  // todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todos: Observable<Todo[]> = this.getAll()
+
+  /**
+   * getAll
+   */
+  public getAll(): Observable<Todo[]> {
+    return this.httpClient.get<Todo[]>(environment.apiUrl)
+  }
 
   async addTodo(title: string): Promise<Todo> {
     // TODO: replace with a POST request
