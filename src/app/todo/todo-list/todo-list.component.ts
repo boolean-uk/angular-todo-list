@@ -9,9 +9,15 @@ import { Observable } from 'rxjs';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  todos$: Observable<Todo[]>;
+  
+  constructor(private readonly todoService: TodoService) {
+    this.todos$ = this.todoService.getAllTodos();
+  }
 
-  todos: Observable<Todo[]> = this.todoService.getAllTodos();
+  getTodos(){
+    this.todoService.getAllTodos();
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -19,6 +25,5 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    //this.todos = this.todoService.todos;
   }
 }
