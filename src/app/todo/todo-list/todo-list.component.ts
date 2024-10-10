@@ -8,16 +8,38 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  private todos: Todo[] = [];
+  private hideCompleted = false;
 
-  todos = this.todoService.todos;
-
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  constructor(private readonly todoService: TodoService) {
+    this.loadTodos();
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+  loadTodos() {
+    this.todoService.getTodos().subscribe((todos) => {
+      this.todos = todos;
+    });
+  }
+
+  updateTodo(todo: Todo) {
+    this.todoService.updateTodo(todo).subscribe(() => {
+      this.loadTodos();
+    });
+  }
+
+  newTodo(title: string) {
+    this.todoService.addTodo(title).subscribe((todo) => {
+      this.todos.push(todo);
+    });
+    this.todoService.addTodo(title);
+  }
+
+  toggleCompleted() {
+    this.hideCompleted = !this.hideCompleted;
+  }
+
+  getTodos() {
+    if (this.hideCompleted) return this.todos.filter((todo) => !todo.completed);
+    else return this.todos;
   }
 }
