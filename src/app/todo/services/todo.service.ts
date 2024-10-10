@@ -40,16 +40,16 @@ export class TodoService {
     return this.httpClient.get<Todo[]>(environment.apiUrl)
   }
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
+  /**
+   * addTodo
+   * @param title 
+   */
+  public addTodo(title: string) {
     const todo = {
-      id: this.todoId++,
       title: title,
       completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+    }
+    this.httpClient.post<Todo>(environment.apiUrl, todo).subscribe()
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
