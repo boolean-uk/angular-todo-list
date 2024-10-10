@@ -10,7 +10,16 @@ export class TodoService {
   private httpClient = inject(HttpClient)
 
   async todos(): Promise<Todo[]>{
-    return firstValueFrom(this.httpClient.get<Todo[]>("https://boolean-uk-api-server.fly.dev/FredrikEH/todo"))
+    let result = await firstValueFrom(this.httpClient.get<Todo[]>("https://boolean-uk-api-server.fly.dev/FredrikEH/todo"))
+    result = result.filter((todo) => !todo.completed)
+    return result
+  }
+
+  async getCompleted(): Promise<Todo[]>{
+    let result = await firstValueFrom(this.httpClient.get<Todo[]>("https://boolean-uk-api-server.fly.dev/FredrikEH/todo"))
+    result = result.filter((todo) => todo.completed)
+    return result
+    //return await firstValueFrom(this.httpClient.get<Todo[]>("https://boolean-uk-api-server.fly.dev/FredrikEH/todo"))
   }
 
   async addTodo(title: string): Promise<Todo> {

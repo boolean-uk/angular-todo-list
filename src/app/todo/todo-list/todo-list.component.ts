@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
-import { filter, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -12,20 +11,20 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.todos();
-
-  filteredTodos: Promise<Todo[]> = this.todos
-
-  // filterTodos() {
-  //   this.filteredTodos = this.todos?.pipe(
-  //     map((todos) =>
-  //       todos.filter((todo) => todo.completed === false)
-  //     )
-  //   );
-  // }
+  boolShowCompleted = false;
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
-    //this.filterTodos()
+  }
+
+  showCompleted(){
+    if(this.boolShowCompleted){
+      this.todos = this.todoService.todos()
+    }
+    else{
+      this.todos = this.todoService.getCompleted()
+    }
+    this.boolShowCompleted = !this.boolShowCompleted
   }
 
   async newTodo(title: string) {
