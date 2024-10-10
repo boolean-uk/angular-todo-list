@@ -10,14 +10,25 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todos = this.todoService.todos();
+  boolShowCompleted = false;
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
+  showCompleted(){
+    if(this.boolShowCompleted){
+      this.todos = this.todoService.todos()
+    }
+    else{
+      this.todos = this.todoService.getCompleted()
+    }
+    this.boolShowCompleted = !this.boolShowCompleted
+  }
+
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = this.todoService.todos();
   }
 }

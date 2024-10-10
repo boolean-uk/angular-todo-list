@@ -18,5 +18,6 @@ export class TodoItemComponent {
       ...this.todo,
       completed: !this.todo.completed,
     });
+    //window.location.reload()
   }
 }
