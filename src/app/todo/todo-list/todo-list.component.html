@@ -1,6 +1,24 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+
+@if(defaultView) {
+  @for (todo of todos; track todo.id) {
+    @if (todo.completed === false) {
+      <app-todo-item
+        [todo]="todo"
+        (update)="updateTodo($event)"
+      ></app-todo-item>
+    }
+  }
+  <button (click)="toggleView()"> Show all todos </button>
+} 
+
+@else {
+  @for (todo of todos; track todo.id) {
+      <app-todo-item
+        [todo]="todo"
+        (update)="updateTodo($event)"
+      ></app-todo-item>
+  }
+  <button (click)="toggleView()"> Show unfinished business only </button>
+}
+
