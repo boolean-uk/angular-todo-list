@@ -1,33 +1,24 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
-import { lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class TodoService {
-  private todoId = 1;
+  private http = inject(HttpClient);
   private apiUrl = 'https://boolean-uk-api-server.fly.dev/George-Alexander-S/todo';
 
-  constructor(private http: HttpClient) {}
-
-  getTodos(): Promise<Todo[]> {
-    return lastValueFrom(this.http.get<Todo[]>(this.apiUrl));
+  public getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.apiUrl);
   }
 
-  async addTodo(title: string): Promise<Todo> {
-    const newTodo: Todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    return lastValueFrom(this.http.post<Todo>(this.apiUrl, newTodo));
+  public addTodo(newTodo: Todo): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, newTodo);
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    const url = `${this.apiUrl}/${updatedTodo.id}`;
-    return lastValueFrom(this.http.put<Todo>(url, updatedTodo));
+  public updateTodo(updatedTodo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${this.apiUrl}/${updatedTodo.id}`, updatedTodo);
   }
 }
