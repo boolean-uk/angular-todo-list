@@ -28,6 +28,14 @@ export class TodoListComponent implements OnInit {
     this.todoService.updateTodo(todo);
   }
 
+  get filteredTodos(): Todo[] {
+    return this.todos.filter(todo => this.showCompleted ? todo.completed : !todo.completed);
+  }
+
+  toggleCompleted(): void {
+    this.showCompleted = !this.showCompleted;
+  }
+
   async newTodo(title: string) {
     this.todoService.addTodo(title).subscribe((newTodo) => {
       this.todos.push(newTodo); 

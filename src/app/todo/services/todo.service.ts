@@ -17,8 +17,6 @@ export class TodoService {
   }
 
   // TODO replace with a get request
-  // todos: Observable<Todo[]> = this.http.get<Todo[]>(this.apiURL);
-
   getData(): Observable<Todo[]> {
     return this.http.get<Todo[]>(this.apiURL);
   }

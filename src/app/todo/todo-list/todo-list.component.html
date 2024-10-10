@@ -1,6 +1,7 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleCompleted()">{{ showCompleted ? 'Show Non-Completed Todos' : 'Show Completed Todos' }}</button>
 <app-todo-item
-  *ngFor="let todo of todos"
+  *ngFor="let todo of filteredTodos"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
