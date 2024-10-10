@@ -19,4 +19,12 @@ export class TodoItemComponent {
       completed: !this.todo.completed,
     });
   }
+
+  onUpdate() {
+    if (!this.todo) {
+      throw new Error('Cannot update null todo');
+    }
+    console.log(this.todo)
+    this.update.emit(this.todo);
+  }
 }
