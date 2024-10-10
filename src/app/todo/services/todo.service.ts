@@ -52,14 +52,11 @@ export class TodoService {
     this.httpClient.post<Todo>(environment.apiUrl, todo).subscribe()
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+  /**
+   * updateTodo
+   * @param updatedTodo 
+   */
+  public updateTodo(updatedTodo: Todo) {
+    this.httpClient.put<Todo>(environment.apiUrl+`/${updatedTodo.id}`, updatedTodo).subscribe()
   }
 }
