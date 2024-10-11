@@ -1,6 +1,7 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<button (click)="toggleCompleted()">Toggle</button>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of getTodos()"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>

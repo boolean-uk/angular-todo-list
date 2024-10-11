@@ -8,16 +8,45 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  private todos: Todo[] = [];
+  private hide = false;
+
+  constructor(private readonly todoService: TodoService) {
+    this.loadTodos();
+  }
+
+  loadTodos() {
+    this.todoService.getTodos().subscribe((todos) => {
+      this.todos = todos;
+    });
+  }
+
+  //todos = this.todoService.todos;
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo).subscribe(() => {
+      this.loadTodos();
+    });
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+  
+  newTodo(title: string): void {
+    if (!title.trim()) return; 
+    this.todoService.addTodo(title).subscribe({
+      next: (todo) => this.todos.push(todo),
+      error: (err) => console.error('Failed to add todo', err),
+    });
+  }
+
+  toggleCompleted() {
+    this.hideCompleted = !this.hideCompleted;
+  }
+
+  getTodos(): Todo[] {
+    return this.hideCompleted
+      ? this.todos.filter((todo) => !todo.completed)
+      : this.todos;
   }
 }
+
