@@ -3,6 +3,7 @@
 
 <app-todo-item
   *ngFor="let todo of filtered$ | async"
+
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>

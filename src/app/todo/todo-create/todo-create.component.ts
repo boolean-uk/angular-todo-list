@@ -15,6 +15,3 @@ export class TodoCreateComponent {
     this.newTodo.emit(this.todo);
   }
 }
-
-
-

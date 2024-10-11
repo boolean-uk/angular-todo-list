@@ -8,5 +8,5 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { TodoEditComponent } from './todo-edit/todo-edit.component'
 
 @NgModule({ declarations: [TodoListComponent, TodoCreateComponent, TodoItemComponent, TodoEditComponent],
-    exports: [TodoCreateComponent, TodoListComponent], imports: [CommonModule, FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+    exports: [TodoCreateComponent, TodoListComponent], imports: [CommonModule, FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())],  })
 export class TodoModule {}

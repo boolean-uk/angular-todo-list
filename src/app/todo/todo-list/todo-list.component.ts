@@ -37,6 +37,5 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    //this.todos = this.todoService.todos;
   }
 }
