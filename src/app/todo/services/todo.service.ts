@@ -24,7 +24,6 @@ export class TodoService {
       environment.apiUrl + '/maaxolofsson/todo',
       body
     );
-    res.subscribe();
     return res;
   }
 
@@ -32,7 +31,6 @@ export class TodoService {
     const res = this.httpClient.get<Todo[]>(
       environment.apiUrl + '/maaxolofsson/todo'
     );
-    res.subscribe();
     return res;
   }
 

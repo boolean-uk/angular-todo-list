@@ -1,6 +1,8 @@
+<button (click)="showCompleted()">Show completed</button>
+<button (click)="showIncompleted()">Show incompleted</button>
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
 <app-todo-item
-  *ngFor="let todo of todos"
+  *ngFor="let todo of getAllTodos()"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
