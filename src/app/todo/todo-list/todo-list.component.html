@@ -1,5 +1,5 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<button (click)="toggleCompleted()">{{this.completed ? "Show all" : "Hide completed"}}</button>
+<button (click)="toggleCompleted()">{{this.completed ? "Hide completed" : "Show all"}}</button>
 
 <app-todo-item
   *ngFor="let todo of filtered$ | async"
