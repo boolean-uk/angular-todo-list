@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -14,7 +14,7 @@ export class TodoListComponent {
   todos$ = new Observable<Todo[]>();
 
   ngOnInit(): void {
-    this.todos$ = this.todoService.getTodos();
+    this.todos$ = this.todoService.getTodos().pipe( map(todo => todo.filter(t => t.completed == false)));
     this.todos$.subscribe((todos) => {
       todos.forEach((todo) => {
         console.log(todo.title);
