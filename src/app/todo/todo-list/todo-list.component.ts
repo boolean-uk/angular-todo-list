@@ -8,9 +8,15 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
+  showChecked: boolean = false
+
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.todos;
+
+  toggleCompleted(target: any) {
+    this.showChecked = target.checked
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
