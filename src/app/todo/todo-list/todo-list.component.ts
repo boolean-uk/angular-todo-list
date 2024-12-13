@@ -8,16 +8,29 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(private readonly todoService: TodoService) {
+    this.fetchTodos();
+  }
 
-  todos = this.todoService.todos;
+  todos: any;
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  //Vänta på att data hämtats
+  async fetchTodos() {
+    this.todos = await this.todoService.getTodos();
+  }
+
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.todos = this.todoService.todos;
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
+    this.todos = this.todoService.todos;
+  }
+
+  async toggleTodos() {
+    await this.todoService.toggleTodos();
     this.todos = this.todoService.todos;
   }
 }
