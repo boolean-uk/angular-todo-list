@@ -9,8 +9,12 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  showCompleted: boolean = false;
+  todos: Promise<Todo[]> = this.todoService.todos;
 
-  todos = this.todoService.todos;
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted;
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
