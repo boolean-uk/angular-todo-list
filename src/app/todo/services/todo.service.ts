@@ -1,42 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+// import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.development';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+export class TodoService {
+  
+  private todoId = 1;
+  private todoList: Todo[] = [];
+
+  http = inject(HttpClient)
+
+  async getTodo() {
+    const result = await firstValueFrom(this.http.get(`${environment.apiUrl}/todo`));
+    // @ts-ignore
+    this.todoList = result;
+    console.log(this.todoList)
+    
+    return this.todoList;
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
 
-    return todo;
+    const result = await firstValueFrom(this.http.post(`${environment.apiUrl}/todo`, {title: title}));
+    console.log(result)
+
+    // @ts-ignore
+    return result;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
@@ -45,8 +40,10 @@ export class TodoService {
     if (!foundTodo) {
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+    const result = await firstValueFrom(this.http.put(`${environment.apiUrl}/todo/${updatedTodo.id}`, updatedTodo));
+
+    //@ts-ignore
+    return result;
   }
 }
