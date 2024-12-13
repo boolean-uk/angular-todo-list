@@ -1,6 +1,21 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<div *ngIf="todoDone">
+  <div *ngFor="let todo of todoService.todos">
+    <app-todo-item
+      [todo]="todo"
+      (update)="updateTodo($event)"
+      *ngIf="todo.completed"
+    ></app-todo-item>
+  </div>
+  <button (click)="renderDoneOrNot()">show not completed</button>
+</div>
+<div *ngIf="!todoDone">
+  <div *ngFor="let todo of todoService.todos">
+    <app-todo-item
+      [todo]="todo"
+      (update)="updateTodo($event)"
+      *ngIf="!todo.completed"
+    ></app-todo-item>
+  </div>
+  <button (click)="renderDoneOrNot()">show completed</button>
+</div>
