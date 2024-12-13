@@ -14,9 +14,10 @@ export class TodoItemComponent {
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
     }
-    this.update.emit({
+    const updatedTodo = {
       ...this.todo,
       completed: !this.todo.completed,
-    });
+    };
+    this.update.emit(updatedTodo);
   }
 }
