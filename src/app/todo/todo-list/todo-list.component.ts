@@ -8,16 +8,25 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(private readonly todoService: TodoService) {
+    console.log('TodoListComponent',this.todos)
+  }
 
   todos = this.todoService.todos;
+  isNotCompletedVisible:boolean=false 
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
-
+  async deleteTodo(todo: Todo) {
+   await this.todoService.deleteTodo(todo);
+    this.todos=this.todoService.getAllTodos()
+  }
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+  toggleCompleted(){
+    this.isNotCompletedVisible=!this.isNotCompletedVisible;
   }
 }
