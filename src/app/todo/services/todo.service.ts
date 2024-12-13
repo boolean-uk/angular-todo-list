@@ -1,52 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  http = inject(HttpClient)
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  todoList: Promise<Todo[]> = this.getTodos();
+
+  async getTodos() {
+    const res = await firstValueFrom(this.http.get<Todo[]>(`${environment.apiUrl}/todo`));
+    console.log(res)    
+    return res;
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+    const todo = await firstValueFrom(this.http.post<Todo>(`${environment.apiUrl}/todo` ,{title: title})); 
+    (await this.todoList).push(todo);
+    return todo
 
-    return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    const todo = await firstValueFrom(
+        this.http.put<Todo>(`${environment.apiUrl}/todo/${updatedTodo.id}`,
+        {
+          title: updatedTodo.title,
+          completed: updatedTodo.completed
+        })
+      );
+      return todo
   }
 }

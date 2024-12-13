@@ -8,16 +8,35 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
+  todos:any
+  showAll: boolean = false
+  filteredTodos: Todo[] = [];
+
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  async ngOnInit() {
+    this.todos = await this.todoService.getTodos();
+    this.filterTodos();
+  }
+
+  filterTodos() {
+    if(this.showAll){
+      this.filteredTodos = this.todos;
+    } else{
+      this.filteredTodos = this.todos.filter((todo: { completed: boolean; }) => todo.completed === true);
+    }
+  }
+
+  toggleView(){
+    this.showAll = !this.showAll
+    this.filterTodos()
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
   }
 
   async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todoService.addTodo(title);
   }
 }
