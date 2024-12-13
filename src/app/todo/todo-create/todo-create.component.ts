@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { TodoService } from '../services/todo.service';
+// todo-create.component.ts
+import { Component, Output, EventEmitter } from '@angular/core';
+import { Todo } from '../models/todo';
 
 @Component({
   selector: 'app-todo-create',
@@ -7,11 +8,14 @@ import { TodoService } from '../services/todo.service';
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
-  @Output('newTodo') newTodo = new EventEmitter<string>();
+  todo: Todo = { id: 0, title: '', completed: false }; // Initialize with id: 0
 
-  todo: string = '';
+  @Output() newTodo = new EventEmitter<Todo>();
 
   submit() {
+    // Emit the new todo when the form is submitted
     this.newTodo.emit(this.todo);
+    // Reset the form
+    this.todo = { id: 0, title: '', completed: false }; // Reset with id: 0
   }
 }

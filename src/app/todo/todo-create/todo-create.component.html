@@ -1,10 +1,11 @@
-<form #form="ngForm" (ngSubmit)="submit(); form.resetForm()">
+<!-- todo-create.component.html -->
+<form (ngSubmit)="submit()">
   <input
     type="text"
-    placeholder="todo: clean room"
-    name="todo"
-    [(ngModel)]="todo"
+    name="title"
+    [(ngModel)]="todo.title"
+    placeholder="Enter new todo..."
     required
   />
-  <button>Create</button>
+  <button type="submit">Add</button>
 </form>

@@ -1,8 +1,17 @@
-<ng-template [ngIf]="todo">
-  <span>{{ todo.title }}</span>
+<div class="todo-item" [class.completed]="todo?.completed">
   <input
     type="checkbox"
-    (click)="toggleCompleted()"
-    [(ngModel)]="todo.completed"
+    [checked]="todo?.completed"
+    (change)="toggleCompleted()"
   />
-</ng-template>
+  <span *ngIf="!editing" (click)="startEditing()">{{ todo?.title }}</span>
+  <input
+    *ngIf="editing"
+    type="text"
+    [(ngModel)]="editedTitle"
+    (blur)="saveTitle()"
+    (keydown.enter)="saveTitle()"
+    (keydown.escape)="cancelEditing()"
+    autofocus
+  />
+</div>
