@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Todo } from '../models/todo';
+import { Component, Input } from '@angular/core';
+import {Todo, UpdateTodo} from '../models/todo';
+import {TodoService} from "../services/todo.service";
 
 @Component({
   selector: 'app-todo-item',
@@ -7,16 +8,17 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-item.component.css'],
 })
 export class TodoItemComponent {
-  @Input('todo') todo: Todo | null = null;
-  @Output('update') update = new EventEmitter<Todo>();
+  @Input() todo: Todo | null = null;
+  checked: boolean | undefined = this.todo?.completed;
 
-  toggleCompleted() {
-    if (!this.todo) {
-      throw new Error('cannot toggle complete on null');
-    }
-    this.update.emit({
-      ...this.todo,
-      completed: !this.todo.completed,
+  constructor(private readonly todoService: TodoService) {}
+
+  onCheckboxChange(checked: boolean | undefined) {
+    this.todoService.updateTodo(<number>this.todo?.id, <UpdateTodo>{
+      // @ts-ignore
+      title: this.todo.title,
+      completed: checked
     });
+    console.log("checked")
   }
 }
