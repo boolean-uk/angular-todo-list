@@ -1,6 +1,16 @@
+<div *ngIf="completed; else incompleted">
+  <button (click)="switch()">Show incompleted</button>
+</div>
+<ng-template #incompleted>
+  <div>
+    <button (click)="switch()">Show completed</button>
+  </div>
+</ng-template>
+
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of todos"
   [todo]="todo"
   (update)="updateTodo($event)"
+  (delete)="deleteTodo($event)"
 ></app-todo-item>
