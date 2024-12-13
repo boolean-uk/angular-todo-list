@@ -1,52 +1,43 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private apiUrl = 'https://boolean-api-server.fly.dev/najemhamo/todo';
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private http: HttpClient) {}
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  getTodos(): Promise<Todo[]> {
+    try {
+      return firstValueFrom(this.http.get<Todo[]>(this.apiUrl));
+    } catch (error) {
+      console.error('Error fetching todos:', error);
+      throw error;
+    }
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
+  addTodo(title: string): Promise<Todo> {
+    try {
+      return firstValueFrom(
+        this.http.post<Todo>(this.apiUrl, { title, completed: false })
+      );
+    } catch (error) {
+      console.error('Error adding todo:', error);
+      throw error;
     }
-    Object.assign(foundTodo, updatedTodo);
+  }
 
-    return foundTodo;
+  updateTodo(updatedTodo: Todo): Promise<Todo> {
+    try {
+      const url = `${this.apiUrl}/${updatedTodo.id}`;
+      return firstValueFrom(this.http.put<Todo>(url, updatedTodo));
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      throw error;
+    }
   }
 }
