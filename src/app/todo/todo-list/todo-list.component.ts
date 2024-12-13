@@ -9,15 +9,25 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
+  showCompleted = false;
+  todos = this.getTodos();
 
-  todos = this.todoService.todos;
+  getTodos() {
+    return this.todoService.todos.then(res => res.filter(todo => todo.completed === this.showCompleted))
+  }
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  toggleCompleted() {
+    this.showCompleted = !this.showCompleted
+    this.todos = this.getTodos()
+  }
+
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.todos = this.getTodos()
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.todos = this.getTodos();
   }
 }
