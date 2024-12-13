@@ -1,51 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  http = inject(HttpClient);
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  get todos(): Promise<Todo[]> {
+    console.log('Getting all todos from api');
+    // @ts-ignore
+    return firstValueFrom(this.http.get(`${environment.apiUrl}/${environment.ghUser}/todo`));
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+    // @ts-ignore
+    const todo : Todo = firstValueFrom(this.http.post(
+      `${environment.apiUrl}/${environment.ghUser}/todo`,
+      {
+        title: title,
+      }
+    ));
+    console.log('Added todo : ', todo);
 
     return todo;
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  async updateTodo(updatedTodo : Todo): Promise<Todo> {
+    // @ts-ignore
+    const foundTodo : Todo = firstValueFrom(this.http.put(
+      `${environment.apiUrl}/${environment.ghUser}/todo/${updatedTodo.id}`,
+      updatedTodo
+    ));
 
     return foundTodo;
   }
