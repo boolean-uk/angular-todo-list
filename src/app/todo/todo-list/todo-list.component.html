@@ -1,6 +1,13 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<button (click)="toggleShowCompleted()">
+  {{ showCompleted ? "Not completed tasks" : "Completed tasks" }}
+</button>
+
+<div *ngFor="let todo of todos | async">
+  <app-todo-item
+    *ngIf="showCompleted === todo.completed"
+    [todo]="todo"
+    (delete)="deleteTodo($event)"
+    (update)="updateTodo($event)"
+  ></app-todo-item>
+</div>

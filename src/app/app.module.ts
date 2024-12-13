@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -6,7 +7,7 @@ import { TodoModule } from './todo/todo.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, TodoModule],
+  imports: [BrowserModule, TodoModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],
 })
