@@ -1,47 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Todo } from '../models/todo';
+import { firstValueFrom } from 'rxjs';
+import { ApplicationRef } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private URL = "https://boolean-api-server.fly.dev/thegrevling/todo"
+  todos: any;
+  http = inject(HttpClient)
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  constructor(private appRef: ApplicationRef) { this.todos = this.getTodos() }
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+  async getTodos() {
+    const result = await firstValueFrom(this.http.get(`${this.URL}`));
+    // @ts-ignore
+    this.todos = result;
+    return this.todos;
+  }
 
-    return todo;
+  async addTodo(title: string) {
+    const request = this.http.post<Todo>(this.URL, { title: title });
+    const response = await firstValueFrom(request);
+    this.todos.push(response)
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
+    const request = this.http.put<Todo>(this.URL + "/" + updatedTodo.id, { title: updatedTodo.title, completed: updatedTodo.completed });
+    const foundTodo = firstValueFrom(request)
     if (!foundTodo) {
       throw new Error('todo not found');
     }
