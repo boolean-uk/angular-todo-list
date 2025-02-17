@@ -1,1 +1,162 @@
-/* You can add global styles to this file, and also import other style files */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(to right, #d8cdc3, #eba75b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 16px;
+  }
+  
+  .status-btn {
+    padding: 12px 20px;
+    background: linear-gradient(to right, #8d5a4d, #feb47b);
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: transform 0.3s ease, background 0.4s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  .status-btn:hover {
+    background: linear-gradient(to right, #382414, #81331f);
+    transform: scale(1.05);
+  }
+  
+  .todo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 650px;
+    width: 100%;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    animation: fadeInUp 0.6s ease-in-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+
+  app-todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  app-todo-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  app-todo-item.completed {
+    background-color: #e0ffe0;
+    text-decoration: line-through;
+    color: #8f8f8f;
+    opacity: 0.7;
+  }
+  
+  app-todo-item .todo-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    transition: color 0.3s ease;
+  }
+  
+
+  app-todo-create {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  input {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    width: 80%;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #0072ff;
+    box-shadow: 0 0 8px rgba(0, 114, 255, 0.5);
+  }
+  
+  button {
+    padding: 12px 20px;
+    background: linear-gradient(to right, #4caf50, #66bb6a);
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:hover {
+    background: linear-gradient(to right, #66bb6a, #4caf50);
+    transform: scale(1.05);
+  }
+  
+ 
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+ 
+  app-todo-item {
+    animation: slideIn 0.5s ease-in-out;
+  }
+  
+  @media (max-width: 768px) {
+    .todo-container {
+      padding: 20px;
+      max-width: 95%;
+    }
+  
+    input {
+      width: 70%;
+    }
+  }
+  
