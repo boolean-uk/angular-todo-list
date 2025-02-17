@@ -1,6 +1,25 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+
+<button (click)="toggleShow()">Toggle complete/incomplete</button>
+
+@for (todo of todos | async; track todo.id){
+  @if(showCompleted){
+    @if(todo.completed){
+    <app-todo-item
+        [todo]="todo"
+        (update)="updateTodo($event)"
+    ></app-todo-item>
+    }
+  }
+@else(){
+    @if(!todo.completed){
+    <app-todo-item
+        [todo]="todo"
+        (update)="updateTodo($event)"
+    ></app-todo-item>
+    }
+  }
+}
+
+
+
