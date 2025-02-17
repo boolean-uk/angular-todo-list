@@ -1,52 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import environment from 'environment/environment';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  constructor(private http: HttpClient) {}
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(environment.apiUrl);
+  }
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
+  addTodo(title: string): Observable<Todo> {
+    const todo: Todo = {
       title: title,
       completed: false,
     };
-    this.todoList.push(todo);
-
-    return todo;
+    return this.http.post<Todo>(environment.apiUrl, todo);
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+  updateTodo(updatedTodo: Todo): Observable<Todo> {
+    return this.http.get<Todo>(`${environment.apiUrl}/${updatedTodo.id}`).pipe(
+      switchMap((foundTodo) => {
+        if (!foundTodo) {
+          return throwError(() => new Error('No todo with that id found!'));
+        }
+        Object.assign(foundTodo, updatedTodo);
+        return this.http.put<Todo>(
+          `${environment.apiUrl}/${updatedTodo.id}`,
+          foundTodo
+        );
+      }),
+      catchError((error) => {
+        console.error('Error updating todo:', error);
+        return throwError(error);
+      })
+    );
   }
 }
