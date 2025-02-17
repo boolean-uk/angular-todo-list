@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { Todo } from '../models/todo';
 
@@ -7,17 +7,34 @@ import { Todo } from '../models/todo';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
 })
-export class TodoListComponent {
+export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  todos!: Promise<Todo[]>;
+  showingCompleted = false;
 
-  updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+  ngOnInit() {
+    this.refreshTodos();
+  }
+
+  private refreshTodos() {
+    this.todos = this.todoService.getTodos().then(todos => 
+      todos.filter(todo => todo.completed === this.showingCompleted)
+    );
+  }
+
+  toggleShowCompleted() {
+    this.showingCompleted = !this.showingCompleted;
+    this.refreshTodos();
+  }
+
+  async updateTodo(todo: Todo) {
+    await this.todoService.updateTodo(todo);
+    this.refreshTodos();
   }
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    this.refreshTodos();
   }
 }
