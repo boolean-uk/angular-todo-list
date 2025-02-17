@@ -1,6 +1,10 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<div>
+  <p>Show all todo tasks</p>
+  <input type="checkbox" [(ngModel)]="filtered" />
+</div>
 <app-todo-item
-  *ngFor="let todo of todos | async"
+  *ngFor="let todo of (filtered ? todos: filteredTodos) | async"
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
