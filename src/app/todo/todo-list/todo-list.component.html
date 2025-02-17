@@ -4,3 +4,4 @@
   [todo]="todo"
   (update)="updateTodo($event)"
 ></app-todo-item>
+<button (click)="switchFilter()">Get {{filter ? "incomplete" : "complete"}}</button>
