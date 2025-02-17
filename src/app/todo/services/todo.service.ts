@@ -11,9 +11,7 @@ export class TodoService {
   http = inject(HttpClient);
   env = environment;
 
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  get todoList(): Promise<Todo[]> {
+  get todos(): Promise<Todo[]> {
     // @ts-ignore
     return firstValueFrom(this.http.get(`${this.env.apiUrl}/pudkipz/todo`));
   }

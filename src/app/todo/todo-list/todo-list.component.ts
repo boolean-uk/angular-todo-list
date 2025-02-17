@@ -15,7 +15,6 @@ export class TodoListComponent {
 
   toggleFilter() {
     this.showUncompleted = !this.showUncompleted;
-    console.log(this.showUncompleted)
   }
 
   updateTodo(todo: Todo) {
