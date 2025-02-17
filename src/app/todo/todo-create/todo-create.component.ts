@@ -5,6 +5,7 @@ import { TodoService } from '../services/todo.service';
   selector: 'app-todo-create',
   templateUrl: './todo-create.component.html',
   styleUrls: ['./todo-create.component.css'],
+  standalone: false
 })
 export class TodoCreateComponent {
   @Output('newTodo') newTodo = new EventEmitter<string>();

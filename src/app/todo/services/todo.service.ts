@@ -1,52 +1,48 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+ 
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  private http = inject(HttpClient)
+  private todoList: Todo[] = []
+  private url = "https://boolean-uk-api-server.fly.dev/sanderrasmussen/todo";
 
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
+  public getToDos()
+  {
 
-    return todo;
+    this.http.get<Todo[]>(this.url, {responseType:"json"})
+      .subscribe(t => this.todoSource.next(t));
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  
+  private todoSource = new Subject<Todo[]>();
+  public todos: Observable<Todo[]> = this.todoSource.asObservable();
 
-    return foundTodo;
+  constructor() {
+    this.getToDos();
+    this.todos.subscribe((launch) => {
+      launch.forEach((launch) => {
+        console.log(launch);
+      });
+    });
+  }
+
+  addTodo(title: string) {
+
+    const todo = {
+      title: title,
+    };
+    this.http.post<Todo>(this.url, todo).subscribe(_ => this.getToDos())
+
+  }
+
+  updateTodo(updatedTodo: Todo) {
+    this.http.put<Todo>(`${this.url}/${updatedTodo.id}`, updatedTodo).subscribe(_ => this.getToDos());
   }
 }
