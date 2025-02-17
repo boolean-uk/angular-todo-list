@@ -10,11 +10,19 @@ import { environment } from 'src/environments/environment';
 })
 export class TodoListComponent {
   todos!: Promise<Todo[]>;
+  filteredTodos!: Promise<Todo[]>;
+  completed: boolean = true;
 
   constructor(private readonly todoService: TodoService) { console.log('url:', `${environment.apiUrl}`); }
 
   ngOnInit(): void {
     this.todos = this.todoService.getTodos();
+    this.toggleCompleted();
+  }
+
+  toggleCompleted(): void {
+    this.filteredTodos = this.todos.then(resolvedTodos => resolvedTodos.filter((filtered) => filtered.completed === this.completed));
+    this.completed = !this.completed;
   }
 
   updateTodo(todo: Todo) {
