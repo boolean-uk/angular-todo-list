@@ -1,52 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { Todo } from '../models/todo';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private http = inject(HttpClient);
+  private todoSource = new Subject<Todo[]>();
+  public todos = this.todoSource.asObservable();
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  constructor() {
+    this.getTodos();
+    this.todos.subscribe(console.log);
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
 
-    return foundTodo;
+  public getTodos() {
+     this.http.get<Todo[]>(`${environment.apiUrl}`, {responseType: "json"}).subscribe(t => this.todoSource.next(t));
+  }
+  public addTodo(todo: Todo) {
+    this.http.post(`${environment.apiUrl}`, todo).subscribe(x => this.getTodos());
+  }
+
+  public updateTodo(todo: Todo): void {
+    this.http
+      .put(`${environment.apiUrl}/${todo.id}`, todo).subscribe(x => this.getTodos());
   }
 }
