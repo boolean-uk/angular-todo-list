@@ -1,52 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private http = inject(HttpClient)
+  private todosSubject = new BehaviorSubject<Todo[]>([]);
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  public getTodos(): Observable<Todo[]> {
+    this.http.get<Todo[]>(environment.apiUrl).subscribe(
+      todos => this.todosSubject.next(todos)
+    );
+    return this.todosSubject.asObservable();
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  public addTodo(title: string){
+ 
+    this.http.post<Todo>(environment.apiUrl, { title, completed: false })
+      .subscribe((newTodo: Todo) => {
+        const currentTodos = this.todosSubject.getValue();
+        this.todosSubject.next([...currentTodos, newTodo]);
+      });
+  }
 
-    return foundTodo;
+  public updateTodo(updatedTodo: Todo): void {
+    this.http.put(`${environment.apiUrl}/${updatedTodo.id}`, updatedTodo)
+      .subscribe(() => {
+        const currentTodos = this.todosSubject.getValue();
+        const updatedTodos = currentTodos.map(todo => 
+          todo.id === updatedTodo.id ? updatedTodo : todo
+        );
+        this.todosSubject.next(updatedTodos);
+      });
   }
 }
