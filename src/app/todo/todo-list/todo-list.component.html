@@ -1,6 +1,13 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<ng-container *ngFor="let todo of todos | async">
+  <ng-container *ngIf="todo.completed === toggle">
+    <app-todo-item [todo]="todo" (update)="updateTodo($event)"> </app-todo-item>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="toggle === false; else elseBlock">
+  <button (click)="toggleCompleted()">See Completed</button>
+</ng-container>
+
+<ng-template #elseBlock>
+  <button (click)="toggleCompleted()">See Uncomplete</button>
+</ng-template>

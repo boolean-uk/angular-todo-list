@@ -11,6 +11,7 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.todos;
+  toggle: boolean = false;
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -19,5 +20,9 @@ export class TodoListComponent {
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
     this.todos = this.todoService.todos;
+  }
+
+  toggleCompleted() {
+     this.toggle = !this.toggle;
   }
 }
