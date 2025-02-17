@@ -12,25 +12,27 @@ import { Observable } from 'rxjs';
 export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService)  {}
 
-  // todos = this.todoService.todos;
   todos$ = new Observable<Todo[]>(); // Define todos as a observable
 
   ngOnInit(): void {
     this.todos$ = this.todoService.getTodos(); // Get the Observable from the service
     this.todos$.subscribe((todo) => { // Define how to handle subscribed changes
-      // Start with a console.log 
       console.log(todo);
     })
   }
 
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo);
+    this.todoService.updateTodo(todo).subscribe((t) => {
+      console.log(t)
+      this.todos$ = this.todoService.getTodos();
+    });
   }
 
-  async newTodo(title: string) {
-    await this.todoService.addTodo(title);
-    // TODO: Fix this; We no longer update the list after adding a todo (?)...
-    // this.todos = this.todoService.todos; 
+  newTodo(title: string) {
+    this.todoService.addTodo(title).subscribe((t) => {
+      console.log(t)
+      this.todos$ = this.todoService.getTodos();
+    });
   }
 }
