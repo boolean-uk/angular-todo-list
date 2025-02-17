@@ -35,7 +35,6 @@ export class TodoService {
     if (!foundTodo) {
       throw new Error('todo not found');
     }
-    Object.assign(foundTodo, updatedTodo);
 
     // @ts-ignore
     return foundTodo;
