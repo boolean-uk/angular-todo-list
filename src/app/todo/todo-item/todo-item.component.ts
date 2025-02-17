@@ -16,7 +16,7 @@ export class TodoItemComponent {
     }
     this.update.emit({
       ...this.todo,
-      completed: !this.todo.completed,
+      completed: this.todo.completed,
     });
   }
 }

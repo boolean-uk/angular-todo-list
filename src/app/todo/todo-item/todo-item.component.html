@@ -2,7 +2,7 @@
   <span>{{ todo.title }}</span>
   <input
     type="checkbox"
-    (click)="toggleCompleted()"
+    (change)="toggleCompleted()"
     [(ngModel)]="todo.completed"
   />
 </ng-template>
