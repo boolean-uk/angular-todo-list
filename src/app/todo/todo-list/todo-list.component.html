@@ -1,6 +1,9 @@
+<div>
+  <label>
+    Show all todos
+  </label>
+  <input type="checkbox" [(ngModel)]="showAll" />
+</div>
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
-<app-todo-item
-  *ngFor="let todo of todos | async"
-  [todo]="todo"
-  (update)="updateTodo($event)"
-></app-todo-item>
+<app-todo-item *ngFor="let todo of (showAll ? todos$ : uncompletedTodos$
+   ) | async" [todo]="todo" (update)="updateTodo($event)"></app-todo-item>
