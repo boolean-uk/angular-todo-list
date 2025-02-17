@@ -13,26 +13,33 @@ export class TodoListComponent implements OnInit {
   constructor(private readonly todoService: TodoService)  {}
 
   todos$ = new Observable<Todo[]>(); // Define todos as a observable
+  filtered_todos : Todo[] = [];
+  displayComplete:boolean = false;
 
-  ngOnInit(): void {
-    this.todos$ = this.todoService.getTodos(); // Get the Observable from the service
-    this.todos$.subscribe((todo) => { // Define how to handle subscribed changes
-      console.log(todo);
+  private updateTodosFilter(observer: Observable<Todo|Todo[]>):void {
+    observer.subscribe(x => {
+      this.todos$ = this.todoService.getTodos();
+      this.todos$.subscribe((todos) => {
+        this.filtered_todos = todos.filter(x => this.displayComplete ? true : !x.completed );
+        console.log(todos);
+      })
     })
   }
 
+  ngOnInit(): void {
+    this.updateTodosFilter(this.todoService.getTodos());
+  }
+
+  toggleDisplayComplete(){
+    this.displayComplete =!this.displayComplete;
+    this.updateTodosFilter(this.todoService.getTodos());
+  }
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo).subscribe((t) => {
-      console.log(t)
-      this.todos$ = this.todoService.getTodos();
-    });
+    this.updateTodosFilter(this.todoService.updateTodo(todo));
   }
 
   newTodo(title: string) {
-    this.todoService.addTodo(title).subscribe((t) => {
-      console.log(t)
-      this.todos$ = this.todoService.getTodos();
-    });
+    this.updateTodosFilter(this.todoService.addTodo(title));
   }
 }
