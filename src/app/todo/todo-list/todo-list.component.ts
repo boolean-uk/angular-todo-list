@@ -8,9 +8,22 @@ import { Todo } from '../models/todo';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent {
+  showCompleted = false
+  todos: Todo[] = [];
+
   constructor(private readonly todoService: TodoService) {}
 
-  todos = this.todoService.todos;
+  async ngOnInit() {
+    await this.loadTodos()
+  }
+
+  async loadTodos() {
+    this.todos = await this.todoService.todos
+  }
+
+  get filteredTodos(): Todo[] {
+    return this.todos.filter(todo => todo.completed === this.showCompleted)
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -18,6 +31,10 @@ export class TodoListComponent {
 
   async newTodo(title: string) {
     await this.todoService.addTodo(title);
-    this.todos = this.todoService.todos;
+    await this.loadTodos()
+  }
+
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted
   }
 }
