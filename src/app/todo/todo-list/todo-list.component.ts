@@ -9,8 +9,17 @@ import { Todo } from '../models/todo';
 })
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
-
+  isActive = false;
   todos = this.todoService.todos;
+
+
+  toggleCompleted() {
+    if(this.isActive) {
+      this.todos = this.todoService.todosCompleted;
+    } else {
+      this.todos = this.todoService.todos;
+    }
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
@@ -21,3 +30,4 @@ export class TodoListComponent {
     this.todos = this.todoService.todos;
   }
 }
+ 

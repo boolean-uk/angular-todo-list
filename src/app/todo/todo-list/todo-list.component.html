@@ -1,4 +1,8 @@
 <app-todo-create (newTodo)="newTodo($event)"></app-todo-create>
+<div>
+  <label for="toggleComplete">Toggle completed</label>
+  <input (change)="toggleCompleted()" [(ngModel)]="isActive" id="toggleComplete" type="checkbox">
+</div>
 <app-todo-item
   *ngFor="let todo of todos | async"
   [todo]="todo"

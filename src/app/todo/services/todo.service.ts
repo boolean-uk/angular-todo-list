@@ -18,7 +18,12 @@ export class TodoService {
   
   get todos(): Promise<Todo[]> {
     // @ts-ignore
-    return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`));
+    return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`)).then(todos => todos.filter(todo => todo.completed === false));
+  }
+
+  get todosCompleted(): Promise<Todo[]> {
+    // @ts-ignore
+    return firstValueFrom(this.http.get(`${environment.apiUrl}/todo`)).then(todos => todos.filter(todo => todo.completed === true));
   }
 
   async addTodo(title: string): Promise<Todo> {
@@ -28,7 +33,6 @@ export class TodoService {
       completed: false,
     })
   );
-  console.log(this.todoList)
    //@ts-ignore
     return todo;
   }
