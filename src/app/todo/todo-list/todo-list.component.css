@@ -6,3 +6,24 @@
   gap: 0.5em;
   padding-top: 0.5em;
 }
+
+.container {
+  border: 1px solid #adadad;
+  border-radius: 5px;
+  padding: 0.5em;
+}
+
+.filter {
+  display: flex;
+  border: 1px solid #adadad;
+  border-radius: 5px;
+  padding: 0.5em;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75em;
+}
