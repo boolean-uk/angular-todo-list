@@ -11,6 +11,7 @@ export class TodoItemComponent {
   @Output('update') update = new EventEmitter<Todo>();
 
   toggleCompleted() {
+    console.log('completed')
     if (!this.todo) {
       throw new Error('cannot toggle complete on null');
     }
