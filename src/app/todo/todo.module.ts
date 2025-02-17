@@ -5,7 +5,10 @@ import { TodoCreateComponent } from './todo-create/todo-create.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { ShowCompleteComponent } from './show-complete/show-complete.component';
 
-@NgModule({ declarations: [TodoListComponent, TodoCreateComponent, TodoItemComponent],
-    exports: [TodoCreateComponent, TodoListComponent], imports: [CommonModule, FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
-export class TodoModule {}
+@NgModule({
+  declarations: [TodoListComponent, TodoCreateComponent, TodoItemComponent],
+  exports: [TodoCreateComponent, TodoListComponent], imports: [CommonModule, FormsModule, ShowCompleteComponent], providers: [provideHttpClient(withInterceptorsFromDi())]
+})
+export class TodoModule { }

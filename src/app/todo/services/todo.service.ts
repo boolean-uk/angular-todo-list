@@ -1,52 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, inject } from '@angular/core';
 import { Todo } from '../models/todo';
+import { Observable, Subject, filter, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  @Inject(HttpClient) client: HttpClient = inject(HttpClient);
+  private todosSource = new Subject<Todo[]>();
+  public todos = this.todosSource.asObservable();
+  public incompleteTodos = this.todos.pipe(map(todos => todos.filter(t => !t.completed)));
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  update() {
+    this.client.get<Todo[]>(environment.apiUrl, { responseType: 'json' })
+      .subscribe(res => this.todosSource.next(res));
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  addTodo(title: string): void {
+    this.client.post(environment.apiUrl, { title }).subscribe(_ => this.update());
+  }
 
-    return foundTodo;
+  constructor() {
+    this.update();
+  }
+
+  updateTodo(updatedTodo: Todo): void {
+    this.client.put(`${environment.apiUrl}/${updatedTodo.id}`, updatedTodo).subscribe(_ => this.update());
   }
 }

@@ -3,6 +3,7 @@ import { Todo } from '../models/todo';
 
 @Component({
   selector: 'app-todo-item',
+  standalone: false,
   templateUrl: './todo-item.component.html',
   styleUrls: ['./todo-item.component.css'],
 })
