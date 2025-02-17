@@ -33,6 +33,18 @@ export class TodoService {
     return firstValueFrom(this.http.get(`${environment.apiUrl}/anselin-thefirst/todo`))
   }
 
+  get incompleteTodos(): Promise<Todo[]> {
+    return this.todos.then((todoList) => {
+      return todoList.filter((todo) => !todo.completed);
+    });
+  }
+
+  get completeTodos(): Promise<Todo[]> {
+    return this.todos.then((todoList) => {
+      return todoList.filter((todo) => todo.completed);
+    });
+  }
+
   async addTodo(title: string): Promise<Todo> {
     const todo = await firstValueFrom(
       this.http.post(`${environment.apiUrl}/anselin-thefirst/todo`, {
@@ -50,4 +62,5 @@ export class TodoService {
     // @ts-ignore
     return foundTodo;
   }
+
 }
