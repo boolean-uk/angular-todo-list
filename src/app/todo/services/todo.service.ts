@@ -1,5 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -24,29 +27,40 @@ export class TodoService {
     },
   ];
 
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  http = inject(HttpClient)
+  get todos(): Promise<Todo[]> {
+    // @ts-ignore
+    return firstValueFrom(this.http.get(`${environment.apiUrl}/anselin-thefirst/todo`))
+  }
+
+  get incompleteTodos(): Promise<Todo[]> {
+    return this.todos.then((todoList) => {
+      return todoList.filter((todo) => !todo.completed);
+    });
+  }
+
+  get completeTodos(): Promise<Todo[]> {
+    return this.todos.then((todoList) => {
+      return todoList.filter((todo) => todo.completed);
+    });
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
+    const todo = await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/anselin-thefirst/todo`, {
+        title: title
+      })
+    );
+    // @ts-ignore
     return todo;
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
+    const foundTodo = await firstValueFrom(
+      this.http.put(`${environment.apiUrl}/anselin-thefirst/todo/${updatedTodo.id}`, updatedTodo)
+    );
+    // @ts-ignore
     return foundTodo;
   }
+
 }
