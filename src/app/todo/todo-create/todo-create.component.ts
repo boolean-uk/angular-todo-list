@@ -4,6 +4,7 @@ import { TodoService } from '../services/todo.service';
 @Component({
   selector: 'app-todo-create',
   templateUrl: './todo-create.component.html',
+  standalone:false,
   styleUrls: ['./todo-create.component.css'],
 })
 export class TodoCreateComponent {
