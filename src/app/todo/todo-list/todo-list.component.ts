@@ -11,6 +11,11 @@ export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
   todos = this.todoService.todos;
+  showUncompleted = true;
+
+  toggleFilter() {
+    this.showUncompleted = !this.showUncompleted;
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
