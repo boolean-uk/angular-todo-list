@@ -10,7 +10,18 @@ import { Todo } from '../models/todo';
 export class TodoListComponent {
   constructor(private readonly todoService: TodoService) {}
 
+  showCompleted: boolean = false;
+
   todos = this.todoService.todos;
+
+  toggleShow(){
+    if(this.showCompleted){
+      this.showCompleted = false;
+    }
+    else{
+      this.showCompleted = true;
+    }
+  }
 
   updateTodo(todo: Todo) {
     this.todoService.updateTodo(todo);
