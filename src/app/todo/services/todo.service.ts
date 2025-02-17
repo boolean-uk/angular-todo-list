@@ -1,52 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { Todo } from '../models/todo';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
+  
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
+  private http = inject(HttpClient)
+
+
 
   // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
-
-  async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+  public getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${environment.apiUrl}`)
+    
   }
 
-  async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
+  public addTodo(title: string): Observable<Todo> {
+    // TODO: replace with a POST request
 
-    return foundTodo;
+   return this.http.post<Todo>(`${environment.apiUrl}`, {title})
+  }
+
+  // public getTodo(id: number): Observable<Todo> {
+  //   return this.http.get<Todo>(`${environment.apiUrl + '/ ' +id.toString()}`)
+  // }
+
+  public updateTodo(updatedTodo: Todo): Observable<Todo> {
+
+    // TODO: replace with a PUT request
+    return this.http.put<Todo>(`${environment.apiUrl}/${updatedTodo.id}`, updatedTodo)
   }
 }
