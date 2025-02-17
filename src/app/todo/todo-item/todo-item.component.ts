@@ -5,6 +5,7 @@ import { Todo } from '../models/todo';
   selector: 'app-todo-item',
   templateUrl: './todo-item.component.html',
   styleUrls: ['./todo-item.component.css'],
+  standalone: false
 })
 export class TodoItemComponent {
   @Input('todo') todo: Todo | null = null;
