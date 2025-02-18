@@ -1,52 +1,32 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Todo } from '../models/todo';
+import {environment} from "../../../environments/environment";
+import {firstValueFrom, Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todoId = 1;
-  private todoList: Todo[] = [
-    {
-      id: this.todoId++,
-      title: 'serve the app',
-      completed: true,
-    },
-    {
-      id: this.todoId++,
-      title: 'familiarise yourself with the codebase',
-      completed: false,
-    },
-    {
-      id: this.todoId++,
-      title: 'start talking to the api',
-      completed: false,
-    },
-  ];
-
-  // TODO replace with a get request
-  todos: Promise<Todo[]> = Promise.resolve(this.todoList);
+  private http = inject(HttpClient);
+  public getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${environment.apiUrl}/${environment.githubUser}/todo`);
+  }
 
   async addTodo(title: string): Promise<Todo> {
-    // TODO: replace with a POST request
-    const todo = {
-      id: this.todoId++,
-      title: title,
-      completed: false,
-    };
-    this.todoList.push(todo);
-
-    return todo;
+    return fetch(`${environment.apiUrl}/${environment.githubUser}/todo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({title: title}),
+    }).then((response) => response.json())
+      .then((data: Todo) => {
+        return data;
+      });
   }
 
   async updateTodo(updatedTodo: Todo): Promise<Todo> {
-    // TODO: replace with a PUT request
-    const foundTodo = this.todoList.find((todo) => todo.id === updatedTodo.id);
-    if (!foundTodo) {
-      throw new Error('todo not found');
-    }
-    Object.assign(foundTodo, updatedTodo);
-
-    return foundTodo;
+    return firstValueFrom(this.http.put<Todo>(`${environment.apiUrl}/${environment.githubUser}/todo/${updatedTodo.id}`, updatedTodo));
   }
 }
